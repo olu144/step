@@ -7,3 +7,36 @@
 #greeting-container {
   margin-top: 20px;
 }
+
+.image-thumbnails {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.image-thumbnails img {
+  margin: 10px;
+  max-height: 200px;
+  max-width: 200px;
+}
+
+.image-thumbnails img:hover {
+  border: thick solid blue;
+}
+
+#random-image-container img {
+  margin-top: 20px;
+}
+
+body {
+  background-color: #f1f1f1;
+  padding: 20px;
+  font-family: Arial;
+}
+
+.wrapper {
+  display: grid;
+    grid-template-columns: 1000px 1000px 1080px;
+  grid-auto-rows: 200px;
+}
+
