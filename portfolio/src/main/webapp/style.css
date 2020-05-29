@@ -5,7 +5,7 @@
 
 #greeting-container {
   margin-top: 3px;
-  color:white;
+  color: white;
   size: 20px;
   background: gray; 
   font-size: 30px;
@@ -13,7 +13,7 @@
 
 #stock-container {
   margin-top: 3px;
-  color:#4CAF50;
+  color: #4CAF50;
   size: 20px;
   background: gray; 
   font-size: 100px;
@@ -41,7 +41,7 @@
 
 body {
   font-family: Arial;
-  background-image:linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)),url(images/back.jpg);
+  background-image: linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)),url(images/back.jpg);
 }
 
 .wrapper {
@@ -56,8 +56,8 @@ body {
 }
 
 .main-nav {
-  margin-top:100px;
-  float:right;
+  margin-top: 100px;
+  float: right;
   font-size: 15px;
 }
 
@@ -80,11 +80,11 @@ h1 {
   color: white;
   font-size: 100px;
   text-align: center;
-  margin-top: 300px;
+  margin-top: 0;
 }
 
 header {
-  background-image:linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)),url(images/back.jpg);
+  background-image: linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)),url(images/back.jpg);
   height: 100vh;
 }
 
@@ -93,62 +93,62 @@ footer {
 }
 
 .button {
-  margin-top: 30px;
-  margin-left: 900px;
+  margin-top: 2%;
+  margin-left: 45%;
 }
 
 .row {
-  max-width: 2000px;
+  max-width: 80%;
   margin: auto;
 }
 
 .gallery { 
-  margin:10px 50px;
+  margin: 10px 50px;
 }
 
 .gallery img {
-  transition:0.5s;
+  transition: 0.5s;
   padding: 15px;
-  max-width: 300px;
+  max-width: 600px;
   max-height: 300px;
   filter: grayscale(100%);
 }
 
 .gallery img:hover {
-  filter:none;
+  filter: none;
   transform: scale(1.1);
 }
 
 p {
-  color:white;
-  font-size:30px;
+  color: white;
+  font-size: 30px;
   font-weight: 700;
   background-color: gray;
 }
 
 dt {
-  color:white;
-  font-size:30px;
+  color: white;
+  font-size: 30px;
   font-weight: 700;
   background-color: gray;
 }
 
 dl {
-  color:white;
-  font-size:30px;
+  color: white;
+  font-size: 30px;
   font-weight: 700;
   background-color: gray;
 }
 
 h2 {
-  color:black;
+  color: black;
   background-color: gray;
   font-size: 50px;
-  text-align:left;
+  text-align: left;
 }
 
 button {
-  background-color:#4CAF50;
+  background-color: #4CAF50;
   color: white;
   padding: 15px 32px;
   text-align: center;
