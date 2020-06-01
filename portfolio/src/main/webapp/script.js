@@ -39,7 +39,7 @@ function addRandomStock() {
   stockContainer.innerText = stock;
 }
 
-function getGreetingUsingArrowFunctions() {
+function getGreetingAndJsonUsingArrowFunctions() {
   fetch('/data').then(response => response.text()).then((greeting) => {
     document.getElementById('greeting-container').innerText = greeting;
   });
