@@ -36,6 +36,19 @@
       <input type="text" id="email" name="email" placeholder="Enter Your E-Mail Address" ><br>
       <input type="submit" value="Submit"><br><br>
     </form>-->
+    <form action="/data" method="POST">
+      <p>Enter your information below</p>
+      <textarea id="name" name="name-input" placeholder="Enter Your Name Here"></textarea><br><br>
+      <textarea id="email" name="email-input" placeholder="Enter Your E-Mail Address Here"></textarea><br><br>
+      <textarea id="phone" name="phone-input" placeholder="Enter Your Phone Number Here"></textarea>
+      <br/><br/>
+      <p>How would you like to be contacted</p>
+      <input type="checkbox" name="phone" value="true"> Via Text
+      <br/>
+      <input type="checkbox" name="email" value="true"> Via E-Mail
+      <br/><br/>
+      <input type="submit"/>
+    </form>
   </body>
   <footer>
     &copy; Copyright 2020 Olu's Website

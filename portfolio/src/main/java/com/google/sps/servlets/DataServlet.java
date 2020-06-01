@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
@@ -58,6 +59,44 @@ public class DataServlet extends HttpServlet {
     json += "\"" + units.get(4) + "\"";
     json += "}";
     return json;
+  }
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // Get the input from the form.
+    String name = getParameter(request, "name-input", "");
+    String email = getParameter(request, "email-input", "");
+    String phone = getParameter(request, "phone-input", "");
+    boolean emailContact = Boolean.parseBoolean(getParameter(request, "email", "false"));
+    boolean phoneContact = Boolean.parseBoolean(getParameter(request, "phone", "false"));
+    String message= "Thank You "+name+" You have not selected how you prefer to be contacted, I will reach out to you at "+email;
+
+    if (emailContact) {
+      message= "Thank You "+name+" I will E-mail you at "+email;
+    }
+
+    if (phoneContact && !emailContact) {
+      message= "Thank You "+name+" I will text out to you at "+phone;
+    }
+
+    if (phoneContact && emailContact) {
+      message+= ", and I will text you at "+phone;
+    }
+
+    // Respond with the result.
+    response.setContentType("text/html;");
+    response.getWriter().println(message);
+  }
+
+  /**
+   * @return the request parameter, or the default value if the parameter
+   *         was not specified by the client
+   */
+  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
+    String value = request.getParameter(name);
+    if (value == null) {
+      return defaultValue;
+    }
+    return value;
   }
 }
 
