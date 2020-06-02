@@ -50,3 +50,19 @@ function simpleLoadComments() {
     document.getElementById('comment-list').innerText = comment;
   });
 }
+
+function getComments(){
+    fetch('/data').then(response => response.json()).then((comments) => {
+        const commentElement=document.getElementById('comment-list');
+        commentElement.innerHTML=' ';
+        comments.forEach((comment)=>{
+            commentElement.appendChild(createListElement(comment));
+        });
+    });
+}
+
+function createListElement(comment){
+    const commentElement=document.createElement('li');
+    commentElement.innerText=comment
+    return commentElement;
+}

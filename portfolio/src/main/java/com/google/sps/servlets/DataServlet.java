@@ -13,7 +13,6 @@
 // limitations under the License.
 
 package com.google.sps.servlets;
-
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -28,7 +27,6 @@ import com.google.gson.Gson;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
-
 import java.util.List;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
@@ -37,7 +35,7 @@ public class DataServlet extends HttpServlet {
   private ArrayList<String> units = new ArrayList<String>();
   private ArrayList<Entity> commentData = new ArrayList<>();
   private ArrayList<String> commentTextOnly = new ArrayList<>();
-  
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     /* Commented out to preserve code
@@ -73,9 +71,10 @@ public class DataServlet extends HttpServlet {
         }
       }
     }
+
     Gson gson = new Gson();
     response.setContentType("application/json;");
-    response.getWriter().println(gson.toJson(commentTextOnly));
+    response.getWriter().println(gson.toJson(commentData));
   }
 
   private String convertToJson(ArrayList<String> units) {
