@@ -38,3 +38,9 @@ function addRandomStock() {
   const stockContainer = document.getElementById('stock-container');
   stockContainer.innerText = stock;
 }
+
+function getGreetingUsingArrowFunctions() {
+  fetch('/data').then(response => response.text()).then((greeting) => {
+    document.getElementById('greeting-container').innerText = greeting;
+  });
+}
