@@ -25,14 +25,21 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.gson.Gson;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
+
+import java.util.List;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   private ArrayList<String> units = new ArrayList<String>();
+  private ArrayList<String> perm = new ArrayList<String>();
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    /* Commented out to preserve code
     units.add("feet");
     units.add("inches");
     units.add("meters");
@@ -42,8 +49,7 @@ public class DataServlet extends HttpServlet {
     response.getWriter().println("Hello Olu!");
     String json = convertToJsonUsingGson(units);
     response.setContentType("application/json;");
-    response.getWriter().println(json);
-    /* Commented out to make changes to part 3
+    response.getWriter().println(json);*/
     String comment = request.getParameter("comment");
     long timestamp = System.currentTimeMillis();
     Entity commentEntity = new Entity("Comment");
@@ -51,7 +57,23 @@ public class DataServlet extends HttpServlet {
     commentEntity.setProperty("timestamp", timestamp);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
-    response.sendRedirect("comments.html");*/
+    Query query = new Query("Comment");
+    PreparedQuery results = datastore.prepare(query);
+    ArrayList<Entity> comms = new ArrayList<>();
+    for (Entity entity : results.asIterable()) {
+      long id = entity.getKey().getId();
+      String comment2 = (String) entity.getProperty("comment");
+      long timestamp2 = (long) entity.getProperty("timestamp");
+      if(comment2!=null){
+        Entity tempCommentEntity = new Entity("Comment");
+        tempCommentEntity.setProperty("comment", comment2);
+        tempCommentEntity.setProperty("timestamp", timestamp2);
+        comms.add(tempCommentEntity);
+      }
+    }
+    Gson gson = new Gson();
+    response.setContentType("application/json;");
+    response.getWriter().println(gson.toJson(comms));
   }
 
   private String convertToJson(ArrayList<String> units) {
@@ -103,7 +125,7 @@ public class DataServlet extends HttpServlet {
     String comment = request.getParameter("comment");
     long timestamp = System.currentTimeMillis();
     Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("commment", comment);
+    commentEntity.setProperty("comment", comment);
     commentEntity.setProperty("timestamp", timestamp);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
