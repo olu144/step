@@ -35,7 +35,7 @@ import java.util.List;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   private ArrayList<String> units = new ArrayList<String>();
-  private ArrayList<String> perm = new ArrayList<String>();
+  private ArrayList<Entity> commentData = new ArrayList<>();
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -59,21 +59,21 @@ public class DataServlet extends HttpServlet {
     datastore.put(commentEntity);
     Query query = new Query("Comment");
     PreparedQuery results = datastore.prepare(query);
-    ArrayList<Entity> comms = new ArrayList<>();
     for (Entity entity : results.asIterable()) {
-      long id = entity.getKey().getId();
       String comment2 = (String) entity.getProperty("comment");
       long timestamp2 = (long) entity.getProperty("timestamp");
       if(comment2!=null){
         Entity tempCommentEntity = new Entity("Comment");
         tempCommentEntity.setProperty("comment", comment2);
         tempCommentEntity.setProperty("timestamp", timestamp2);
-        comms.add(tempCommentEntity);
+        if(!commentData.contains(tempCommentEntity)){
+            commentData.add(tempCommentEntity);
+        }
       }
     }
     Gson gson = new Gson();
     response.setContentType("application/json;");
-    response.getWriter().println(gson.toJson(comms));
+    response.getWriter().println(gson.toJson(commentData));
   }
 
   private String convertToJson(ArrayList<String> units) {
