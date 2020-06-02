@@ -21,6 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
@@ -29,6 +32,7 @@ public class DataServlet extends HttpServlet {
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    /* Preserved code from step 4
     units.add("feet");
     units.add("inches");
     units.add("meters");
@@ -38,7 +42,15 @@ public class DataServlet extends HttpServlet {
     response.getWriter().println("Hello Olu!");
     String json = convertToJson(units);
     response.setContentType("application/json;");
-    response.getWriter().println(json);
+    response.getWriter().println(json);*/
+    String comment = request.getParameter("comment");
+    long timestamp = System.currentTimeMillis();
+    Entity commentEntity = new Entity("Comment");
+    commentEntity.setProperty("comment", comment);
+    commentEntity.setProperty("timestamp", timestamp);
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(commentEntity);
+    response.sendRedirect("comments.html");
   }
 
   private String convertToJson(ArrayList<String> units) {
@@ -62,29 +74,32 @@ public class DataServlet extends HttpServlet {
   }
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Get the input from the form.
+    /* Preserved code from step 4
     String name = getParameter(request, "name-input", "");
     String email = getParameter(request, "email-input", "");
     String phone = getParameter(request, "phone-input", "");
     boolean emailContact = Boolean.parseBoolean(getParameter(request, "email", "false"));
     boolean phoneContact = Boolean.parseBoolean(getParameter(request, "phone", "false"));
     String message= "Thank You "+name+" You have not selected how you prefer to be contacted, I will reach out to you at "+email;
-
     if (emailContact) {
       message= "Thank You "+name+" I will E-mail you at "+email;
     }
-
     if (phoneContact && !emailContact) {
       message= "Thank You "+name+" I will text out to you at "+phone;
     }
-
     if (phoneContact && emailContact) {
       message+= ", and I will text you at "+phone;
     }
-
-    // Respond with the result.
     response.setContentType("text/html;");
-    response.getWriter().println(message);
+    response.getWriter().println(message);*/
+    String comment = request.getParameter("comment");
+    long timestamp = System.currentTimeMillis();
+    Entity commentEntity = new Entity("Comment");
+    commentEntity.setProperty("commment", comment);
+    commentEntity.setProperty("timestamp", timestamp);
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(commentEntity);
+    response.sendRedirect("comments.html");
   }
 
   /**
@@ -99,5 +114,6 @@ public class DataServlet extends HttpServlet {
     return value;
   }
 }
+
 
 

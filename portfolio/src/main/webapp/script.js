@@ -44,3 +44,12 @@ function getGreetingAndJsonUsingArrowFunctions() {
     document.getElementById('greeting-container').innerText = greeting;
   });
 }
+
+function loadComments() {
+  fetch('/data').then(response => response.json()).then((comments) => {
+    const commentListElement = document.getElementById('comment-list');
+    comments.forEach((comment) => {
+      commentListElement.appendChild(createCommentElement(comment));
+    })
+  });
+}
