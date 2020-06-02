@@ -24,15 +24,15 @@ import java.util.Arrays;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.gson.Gson;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  ArrayList<String> units=new ArrayList<String>();
+  private ArrayList<String> units = new ArrayList<String>();
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    /* Preserved code from step 4
     units.add("feet");
     units.add("inches");
     units.add("meters");
@@ -40,9 +40,10 @@ public class DataServlet extends HttpServlet {
     units.add("pounds");
     response.setContentType("text/html;");
     response.getWriter().println("Hello Olu!");
-    String json = convertToJson(units);
+    String json = convertToJsonUsingGson(units);
     response.setContentType("application/json;");
-    response.getWriter().println(json);*/
+    response.getWriter().println(json);
+    /* Commented out to make changes to part 3
     String comment = request.getParameter("comment");
     long timestamp = System.currentTimeMillis();
     Entity commentEntity = new Entity("Comment");
@@ -50,7 +51,7 @@ public class DataServlet extends HttpServlet {
     commentEntity.setProperty("timestamp", timestamp);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
-    response.sendRedirect("comments.html");
+    response.sendRedirect("comments.html");*/
   }
 
   private String convertToJson(ArrayList<String> units) {
@@ -72,6 +73,13 @@ public class DataServlet extends HttpServlet {
     json += "}";
     return json;
   }
+
+  private String convertToJsonUsingGson(ArrayList<String> units) {
+    Gson gson = new Gson();
+    String json = gson.toJson(units);
+    return json;
+  }
+
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     /* Preserved code from step 4
@@ -114,6 +122,3 @@ public class DataServlet extends HttpServlet {
     return value;
   }
 }
-
-
-
