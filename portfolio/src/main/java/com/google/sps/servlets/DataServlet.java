@@ -36,6 +36,7 @@ import java.util.List;
 public class DataServlet extends HttpServlet {
   private ArrayList<String> units = new ArrayList<String>();
   private ArrayList<Entity> commentData = new ArrayList<>();
+  private ArrayList<String> commentTextOnly = new ArrayList<>();
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -60,20 +61,21 @@ public class DataServlet extends HttpServlet {
     Query query = new Query("Comment");
     PreparedQuery results = datastore.prepare(query);
     for (Entity entity : results.asIterable()) {
-      String comment2 = (String) entity.getProperty("comment");
-      long timestamp2 = (long) entity.getProperty("timestamp");
-      if(comment2!=null){
+      String tempComment = (String) entity.getProperty("comment");
+      long tempTimestamp = (long) entity.getProperty("timestamp");
+      if(tempComment != null){
         Entity tempCommentEntity = new Entity("Comment");
-        tempCommentEntity.setProperty("comment", comment2);
-        tempCommentEntity.setProperty("timestamp", timestamp2);
-        if(!commentData.contains(tempCommentEntity)){
+        tempCommentEntity.setProperty("comment", tempComment);
+        tempCommentEntity.setProperty("timestamp", tempTimestamp);
+        if(!commentData.contains(tempCommentEntity) && tempComment.strip()!=""){
             commentData.add(tempCommentEntity);
+            commentTextOnly.add(tempComment);
         }
       }
     }
     Gson gson = new Gson();
     response.setContentType("application/json;");
-    response.getWriter().println(gson.toJson(commentData));
+    response.getWriter().println(gson.toJson(commentTextOnly));
   }
 
   private String convertToJson(ArrayList<String> units) {

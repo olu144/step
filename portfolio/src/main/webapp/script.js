@@ -45,11 +45,8 @@ function getGreetingAndJsonUsingArrowFunctions() {
   });
 }
 
-function loadComments() {
-  fetch('/data').then(response => response.json()).then((comments) => {
-    const commentListElement = document.getElementById('comment-list');
-    comments.forEach((comment) => {
-      commentListElement.appendChild(createCommentElement(comment));
-    })
+function simpleLoadComments() {
+  fetch('/data').then(response => response.text()).then((comment) => {
+    document.getElementById('comment-list').innerText = comment;
   });
 }
