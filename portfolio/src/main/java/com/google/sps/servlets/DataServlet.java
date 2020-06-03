@@ -40,13 +40,16 @@ public class DataServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
     ArrayList<Comment>comments=new ArrayList<>();
+    //int userChoice = getUserChoice(request);
+    int i=0;
     for (Entity entity : results.asIterable()) {
-      long tempId=entity.getKey().getId();
+      long tempId = (long) entity.getKey().getId();
       String tempComment = (String) entity.getProperty("comment");
       long tempTimestamp = (long) entity.getProperty("timestamp");
-      if(tempComment != null && tempComment.strip()!=""){
+      if(tempComment != null && tempComment.strip()!="" && i<5){
         Comment comment= new Comment(tempId, tempComment, tempTimestamp);
         comments.add(comment);
+        i++;
       }
     }
     Gson gson = new Gson();
@@ -76,5 +79,19 @@ public class DataServlet extends HttpServlet {
       return defaultValue;
     }
     return value;
+  }
+
+  private int getUserChoice(HttpServletRequest request) {
+    // Get the input from the form.
+    String userChoiceString = request.getParameter("user-choice");
+    // Convert the input to an int.
+    int userChoice;
+    try {
+      userChoice = Integer.parseInt(userChoiceString);
+    } catch (NumberFormatException e) {
+      System.err.println("Could not convert to int: " + userChoiceString);
+      return -1;
+    }
+    return userChoice;
   }
 }
