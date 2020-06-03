@@ -39,13 +39,13 @@ public class DataServlet extends HttpServlet {
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
-    ArrayList<Comment>comments=new ArrayList<>();
+    ArrayList<Comment>comments = new ArrayList<>();
     for (Entity entity : results.asIterable()) {
-      long tempId=entity.getKey().getId();
+      long tempId = entity.getKey().getId();
       String tempComment = (String) entity.getProperty("comment");
       long tempTimestamp = (long) entity.getProperty("timestamp");
-      if(tempComment != null && tempComment.strip()!=""){
-        Comment comment= new Comment(tempId, tempComment, tempTimestamp);
+      if(tempComment != null && tempComment.strip() != ""){
+        Comment comment = new Comment(tempId, tempComment, tempTimestamp);
         comments.add(comment);
       }
     }
@@ -64,17 +64,5 @@ public class DataServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
     response.sendRedirect("comments.html");
-  }
-
-  /**
-   * @return the request parameter, or the default value if the parameter
-   *         was not specified by the client
-   */
-  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
-    String value = request.getParameter(name);
-    if (value == null) {
-      return defaultValue;
-    }
-    return value;
   }
 }
