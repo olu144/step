@@ -47,7 +47,8 @@ function getGreetingAndJsonUsingArrowFunctions() {
 
 //Fetches comments from the server and adds them to the DOM.
 function LoadComments(){
-    fetch('/data').then(response => response.json()).then((comments) => {
+    var max=getMax();
+    fetch('/data?user-choice='+max).then(response => response.json()).then((comments) => {
         const commentListElement=document.getElementById('comment-list');
         commentListElement.innerHTML=' ';
         comments.forEach((comment)=>{
@@ -61,4 +62,15 @@ function createListElement(comment){
     const commentListElement=document.createElement('li');
     commentListElement.innerText=comment.comment
     return commentListElement;
+}
+
+function getMax(){
+    var temp=document.getElementById("maxwant");
+    var max=temp.options[temp.selectedIndex].value;
+    return max;
+}
+
+function deleteComment(){
+    fetch("/delete-list", {method: 'POST'}).then(()=>{
+    });
 }
