@@ -45,24 +45,20 @@ function getGreetingAndJsonUsingArrowFunctions() {
   });
 }
 
-function simpleLoadComments() {
-  fetch('/data').then(response => response.text()).then((comment) => {
-    document.getElementById('comment-list').innerText = comment;
-  });
-}
-
-function getComments(){
+//Fetches comments from the server and adds them to the DOM.
+function LoadComments(){
     fetch('/data').then(response => response.json()).then((comments) => {
-        const commentElement=document.getElementById('comment-list');
-        commentElement.innerHTML=' ';
+        const commentListElement=document.getElementById('comment-list');
+        commentListElement.innerHTML=' ';
         comments.forEach((comment)=>{
-            commentElement.appendChild(createListElement(comment));
+            commentListElement.appendChild(createListElement(comment));
         });
     });
 }
 
+//Creates an element that represents a comment
 function createListElement(comment){
-    const commentElement=document.createElement('li');
-    commentElement.innerText=comment
-    return commentElement;
+    const commentListElement=document.createElement('li');
+    commentListElement.innerText=comment.comment
+    return commentListElement;
 }

@@ -28,7 +28,7 @@
       <li class="active"><a href="comments.html" style="color:white"> COMMENTS</a></li>
     </ul>
   </body>
-  <body onload="loadComments()">
+  <body>
     <h1 style=margin-top:50px>&#128172<i>Feel Free to Leave Comments</i>&#128172</h1>
     <form method="POST" action="/data">
       <input type="text" name="comment"/>
@@ -36,8 +36,7 @@
       <button>Submit</button>
     </form>
     <div id="content">
-        <button onclick="getComments()">Click here to load comments</button>
+        <button onclick="LoadComments()">Click here to load comments</button>
     <div id="comment-list"></div>
-    <ul id="comment-list"></ul>
   </body>
 </html>

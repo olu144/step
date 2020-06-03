@@ -29,100 +29,33 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import java.util.List;
 
+
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  private ArrayList<String> units = new ArrayList<String>();
-  private ArrayList<Entity> commentData = new ArrayList<>();
-  private ArrayList<String> commentTextOnly = new ArrayList<>();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    /* Commented out to preserve code
-    units.add("feet");
-    units.add("inches");
-    units.add("meters");
-    units.add("miles");
-    units.add("pounds");
-    response.setContentType("text/html;");
-    response.getWriter().println("Hello Olu!");
-    String json = convertToJsonUsingGson(units);
-    response.setContentType("application/json;");
-    response.getWriter().println(json);*/
-    String comment = request.getParameter("comment");
-    long timestamp = System.currentTimeMillis();
-    Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("comment", comment);
-    commentEntity.setProperty("timestamp", timestamp);
+    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(commentEntity);
-    Query query = new Query("Comment");
     PreparedQuery results = datastore.prepare(query);
+    ArrayList<Comment>comments=new ArrayList<>();
     for (Entity entity : results.asIterable()) {
+      long tempId=entity.getKey().getId();
       String tempComment = (String) entity.getProperty("comment");
       long tempTimestamp = (long) entity.getProperty("timestamp");
-      if(tempComment != null){
-        Entity tempCommentEntity = new Entity("Comment");
-        tempCommentEntity.setProperty("comment", tempComment);
-        tempCommentEntity.setProperty("timestamp", tempTimestamp);
-        if(!commentData.contains(tempCommentEntity) && tempComment.strip()!=""){
-            commentData.add(tempCommentEntity);
-            commentTextOnly.add(tempComment);
-        }
+      if(tempComment != null && tempComment.strip()!=""){
+        Comment comment= new Comment(tempId, tempComment, tempTimestamp);
+        comments.add(comment);
       }
     }
-
     Gson gson = new Gson();
     response.setContentType("application/json;");
-    response.getWriter().println(gson.toJson(commentData));
-  }
-
-  private String convertToJson(ArrayList<String> units) {
-    String json = "{";
-    json += "\"unit 1\": ";
-    json += "\"" + units.get(0) + "\"";
-    json += ", ";
-    json += "\"unit 2\": ";
-    json += "\"" + units.get(1) + "\"";
-    json += ", ";
-    json += "\"unit 3\": ";
-    json += "\"" + units.get(2) + "\"";
-    json += ", ";
-    json += "\"unit 4\": ";
-    json += "\"" + units.get(3) + "\"";
-    json += ", ";
-    json += "\"unit 5\": ";
-    json += "\"" + units.get(4) + "\"";
-    json += "}";
-    return json;
-  }
-
-  private String convertToJsonUsingGson(ArrayList<String> units) {
-    Gson gson = new Gson();
-    String json = gson.toJson(units);
-    return json;
+    response.getWriter().println(gson.toJson(comments));
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    /* Preserved code from step 4
-    String name = getParameter(request, "name-input", "");
-    String email = getParameter(request, "email-input", "");
-    String phone = getParameter(request, "phone-input", "");
-    boolean emailContact = Boolean.parseBoolean(getParameter(request, "email", "false"));
-    boolean phoneContact = Boolean.parseBoolean(getParameter(request, "phone", "false"));
-    String message= "Thank You "+name+" You have not selected how you prefer to be contacted, I will reach out to you at "+email;
-    if (emailContact) {
-      message= "Thank You "+name+" I will E-mail you at "+email;
-    }
-    if (phoneContact && !emailContact) {
-      message= "Thank You "+name+" I will text out to you at "+phone;
-    }
-    if (phoneContact && emailContact) {
-      message+= ", and I will text you at "+phone;
-    }
-    response.setContentType("text/html;");
-    response.getWriter().println(message);*/
     String comment = request.getParameter("comment");
     long timestamp = System.currentTimeMillis();
     Entity commentEntity = new Entity("Comment");
