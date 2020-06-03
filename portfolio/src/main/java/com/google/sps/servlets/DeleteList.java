@@ -26,7 +26,7 @@ public class DeleteList extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
     for (Entity commentEntity : results.asIterable()) {
-        datastore.delete(commentEntity.getKey());
+      datastore.delete(commentEntity.getKey());
     response.sendRedirect("/comments.html");
     }
   }

@@ -39,25 +39,19 @@ function addRandomStock() {
   stockContainer.innerText = stock;
 }
 
-function getGreetingAndJsonUsingArrowFunctions() {
-  fetch('/data').then(response => response.text()).then((greeting) => {
-    document.getElementById('greeting-container').innerText = greeting;
-  });
-}
-
-//Fetches comments from the server and adds them to the DOM.
+// Fetches comments from the server and adds them to the DOM.
 function LoadComments(){
   var max=getMax();
-    fetch('/data?user-choice='+max).then(response => response.json()).then((comments) => {
-      const commentListElement=document.getElementById('comment-list');
-      commentListElement.innerHTML=' ';
-      comments.forEach((comment)=>{
-        commentListElement.appendChild(createListElement(comment));
+  fetch('/data?user-choice='+max).then(response => response.json()).then((comments) => {
+  const commentListElement=document.getElementById('comment-list');
+  commentListElement.innerHTML=' ';
+  comments.forEach((comment)=>{
+  commentListElement.appendChild(createListElement(comment));
     });
   });
 }
 
-//Creates an element that represents a comment
+// Creates an element that represents a comment
 function createListElement(comment){
   const commentListElement=document.createElement('li');
   commentListElement.innerText=comment.comment

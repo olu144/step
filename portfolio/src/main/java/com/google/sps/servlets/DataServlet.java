@@ -36,21 +36,20 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    //int userChoice=Integer.parseInt(request.getParameter("user-choice"));
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
-    ArrayList<Comment>comments=new ArrayList<>();
+    ArrayList<Comment>comments = new ArrayList<>();
     int userChoice = getUserChoice(request);
-    int i=0;
+    int count = 0;
     for (Entity commentEntity : results.asIterable()) {
       long tempId = (long) commentEntity.getKey().getId();
       String tempComment = (String) commentEntity.getProperty("comment");
       long tempTimestamp = (long) commentEntity.getProperty("timestamp");
-      if(tempComment != null && tempComment.strip()!="" && i<userChoice){
-        Comment comment= new Comment(tempId, tempComment, tempTimestamp);
+      if(tempComment != null && tempComment.strip()!= "" && count<userChoice){
+        Comment comment = new Comment(tempId, tempComment, tempTimestamp);
         comments.add(comment);
-        i++;
+        count++;
       }
     }
     Gson gson = new Gson();
@@ -68,18 +67,6 @@ public class DataServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
     response.sendRedirect("comments.html");
-  }
-
-  /**
-   * @return the request parameter, or the default value if the parameter
-   *         was not specified by the client
-   */
-  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
-    String value = request.getParameter(name);
-    if (value == null) {
-      return defaultValue;
-    }
-    return value;
   }
 
   private int getUserChoice(HttpServletRequest request) {

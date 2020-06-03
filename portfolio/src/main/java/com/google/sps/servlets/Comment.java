@@ -1,12 +1,12 @@
 package com.google.sps.servlets;
 public class Comment {
-  public long id;
-  public String comment;
-  public long timestamp;
+  private long id;
+  private String comment;
+  private long timestamp;
 
   public Comment(long id, String comment, long timestamp){
-    this.id=id;
-    this.comment=comment;
-    this.timestamp=timestamp;
+    this.id = id;
+    this.comment = comment;
+    this.timestamp = timestamp;
   }
 }
