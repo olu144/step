@@ -46,7 +46,7 @@ public class DataServlet extends HttpServlet {
       long tempId = (long) commentEntity.getKey().getId();
       String tempComment = (String) commentEntity.getProperty("comment");
       long tempTimestamp = (long) commentEntity.getProperty("timestamp");
-      if(tempComment != null && tempComment.strip()!= "" && count<userChoice){
+      if (tempComment != null && tempComment.strip() != "" && count < userChoice){
         Comment comment = new Comment(tempId, tempComment, tempTimestamp);
         comments.add(comment);
         count++;
