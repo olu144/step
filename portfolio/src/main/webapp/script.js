@@ -40,31 +40,30 @@ function addRandomStock() {
 }
 
 // Fetches comments from the server and adds them to the DOM.
-function LoadComments(){
-  var max=getMax();
-  fetch('/data?user-choice='+max).then(response => response.json()).then((comments) => {
-  const commentListElement=document.getElementById('comment-list');
-  commentListElement.innerHTML=' ';
-  comments.forEach((comment)=>{
+function LoadComments() {
+  const max = getMax();
+  fetch('/data?numCommentsToLoad=' + max).then(response => response.json()).then((comments) => {
+  const commentListElement = document.getElementById('comment-list');
+  commentListElement.innerHTML = ' ';
+  comments.forEach((comment) => {
   commentListElement.appendChild(createListElement(comment));
     });
   });
 }
 
 // Creates an element that represents a comment
-function createListElement(comment){
-  const commentListElement=document.createElement('li');
-  commentListElement.innerText=comment.comment
+function createListElement(comment) {
+  const commentListElement = document.createElement('li');
+  commentListElement.innerText = comment.comment
   return commentListElement;
 }
 
-function getMax(){
-  var temp=document.getElementById("maxwant");
-  var max=temp.options[temp.selectedIndex].value;
+function getMax() {
+  const maxElement = document.getElementById("maxwant");
+  const max = maxElement.options[maxElement.selectedIndex].value;
   return max;
 }
 
-function deleteComment(){
-  fetch("/delete-list", {method: 'POST'}).then(()=>{
-  });
+function deleteComment() {
+  fetch("/delete-list", {method: 'POST'})
 }

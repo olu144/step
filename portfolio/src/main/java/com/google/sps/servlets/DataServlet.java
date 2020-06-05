@@ -40,16 +40,16 @@ public class DataServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
     ArrayList<Comment>comments = new ArrayList<>();
-    int userChoice = getUserChoice(request);
-    int count = 0;
+    int numCommentsToLoad = getNumCommentsToLoad(request);
     for (Entity commentEntity : results.asIterable()) {
-      long tempId = (long) commentEntity.getKey().getId();
-      String tempComment = (String) commentEntity.getProperty("comment");
-      long tempTimestamp = (long) commentEntity.getProperty("timestamp");
-      if(tempComment != null && tempComment.strip()!= "" && count<userChoice){
-        Comment comment = new Comment(tempId, tempComment, tempTimestamp);
-        comments.add(comment);
-        count++;
+      if (comments.size() < numCommentsToLoad) {
+        long tempId = (long) commentEntity.getKey().getId();
+        String tempComment = (String) commentEntity.getProperty("comment");
+        long tempTimestamp = (long) commentEntity.getProperty("timestamp");
+        if (tempComment != null && tempComment.strip() != "") {
+          Comment comment = new Comment(tempId, tempComment, tempTimestamp);
+          comments.add(comment);
+        }
       }
     }
     Gson gson = new Gson();
@@ -69,18 +69,18 @@ public class DataServlet extends HttpServlet {
     response.sendRedirect("comments.html");
   }
 
-  private int getUserChoice(HttpServletRequest request) {
+  private int getNumCommentsToLoad(HttpServletRequest request) {
     // Get the input from the form.
-    String userChoiceString = request.getParameter("user-choice");
+    String numCommentsToLoadString = request.getParameter("numCommentsToLoad");
     // Convert the input to an int.
-    int userChoice;
+    int numCommentsToLoad;
     try {
-      userChoice = Integer.parseInt(userChoiceString);
+      numCommentsToLoad = Integer.parseInt(numCommentsToLoadString);
     } catch (NumberFormatException e) {
-      System.err.println("Could not convert to int: " + userChoiceString);
+      System.err.println("Could not convert to int: " + numCommentsToLoadString);
       return -1;
     }
-    return userChoice;
+    return numCommentsToLoad;
   }
 }
 
