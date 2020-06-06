@@ -33,7 +33,24 @@
       <br/>
       <button>Submit</button>
     </form>
-    <div id="content"></div>
+    <label for="useroptions" style="background:gray">How many comments would you like to see?:</label>
+    <select name="useroptions" id="maxwant">
+      <option value="1">One</option>
+      <option value="2">Two</option>
+      <option value="3">Three</option>
+      <option value="4">Four</option>
+      <option value="5">Five</option>
+      <option value="10">Ten</option>
+      <option value="20">Twenty</option>
+      <option value="30">Thirty</option>
+      <option value="40">Fourty</option>
+      <option value="50">Fifty</option>
+      <option value="100">One-Hundred</option>
+      <option value="200">Two-Hundred</option>
+      <option value="99999">All</option>
+    </select>
+    <div class="content"></div>
+        <button onclick="deleteComment()" style="background-color:red">Click here to delete comments</button>
         <button onclick="LoadComments()">Click here to load comments</button>
     <div id="comment-list"></div>
   </body>

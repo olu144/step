@@ -40,13 +40,16 @@ public class DataServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
     ArrayList<Comment>comments = new ArrayList<>();
-    for (Entity entity : results.asIterable()) {
-      long tempId = entity.getKey().getId();
-      String tempComment = (String) entity.getProperty("comment");
-      long tempTimestamp = (long) entity.getProperty("timestamp");
-      if(tempComment != null && tempComment.strip() != ""){
-        Comment comment = new Comment(tempId, tempComment, tempTimestamp);
-        comments.add(comment);
+    int numCommentsToLoad = getNumCommentsToLoad(request);
+    for (Entity commentEntity : results.asIterable()) {
+      if (comments.size() < numCommentsToLoad) {
+        long tempId = (long) commentEntity.getKey().getId();
+        String tempComment = (String) commentEntity.getProperty("comment");
+        long tempTimestamp = (long) commentEntity.getProperty("timestamp");
+        if (tempComment != null && tempComment.strip() != "") {
+          Comment comment = new Comment(tempId, tempComment, tempTimestamp);
+          comments.add(comment);
+        }
       }
     }
     Gson gson = new Gson();
@@ -64,6 +67,20 @@ public class DataServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
     response.sendRedirect("comments.html");
+  }
+
+  private int getNumCommentsToLoad(HttpServletRequest request) {
+    // Get the input from the form.
+    String numCommentsToLoadString = request.getParameter("numCommentsToLoad");
+    // Convert the input to an int.
+    int numCommentsToLoad;
+    try {
+      numCommentsToLoad = Integer.parseInt(numCommentsToLoadString);
+    } catch (NumberFormatException e) {
+      System.err.println("Could not convert to int: " + numCommentsToLoadString);
+      return -1;
+    }
+    return numCommentsToLoad;
   }
 }
 

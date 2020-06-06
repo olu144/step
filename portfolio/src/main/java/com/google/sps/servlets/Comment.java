@@ -4,7 +4,7 @@ public class Comment {
   private String comment;
   private long timestamp;
 
-  public Comment(long id, String comment, long timestamp){
+  public Comment(long id, String comment, long timestamp) {
     this.id = id;
     this.comment = comment;
     this.timestamp = timestamp;
