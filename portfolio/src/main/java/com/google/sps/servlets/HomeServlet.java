@@ -14,12 +14,12 @@ public class HomeServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Boolean isLoggedIn=false;
+    Boolean isLoggedIn = false;
     UserService userService = UserServiceFactory.getUserService();
     if (userService.isUserLoggedIn()) {
-      isLoggedIn=true;
+      isLoggedIn = true;
     } else {
-      isLoggedIn=false;
+      isLoggedIn = false;
     }
     Gson gson = new Gson();
     response.setContentType("application/json;");
