@@ -52,14 +52,14 @@ async function LoadComments() {
       });
     });
   }else{
-    location.replace("/_ah/login?continue=%2Fcomments.html")
+    location.replace("/_ah/login?continue=%2Fcomments.html");
   }
 }
 
 // Creates an element that represents a comment
 function createListElement(comment) {
   const commentListElement = document.createElement('li');
-  commentListElement.innerText = comment.comment
+  commentListElement.innerText = comment.email + " : " + comment.comment
   return commentListElement;
 }
 
