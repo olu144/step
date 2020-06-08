@@ -63,20 +63,20 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     UserService userService = UserServiceFactory.getUserService();
-      if (userService.isUserLoggedIn()) {
-    String comment = request.getParameter("comment");
-    long timestamp = System.currentTimeMillis();
-    String email = userService.getCurrentUser().getEmail();
-    Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("comment", comment);
-    commentEntity.setProperty("timestamp", timestamp);
-    commentEntity.setProperty("email", email);
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(commentEntity);
-    response.sendRedirect("comments.html");
-      }else{
-         response.sendRedirect("/_ah/login?continue=%2Fcomments.html");  
-      }
+    if (userService.isUserLoggedIn()) {
+      String comment = request.getParameter("comment");
+      long timestamp = System.currentTimeMillis();
+      String email = userService.getCurrentUser().getEmail();
+      Entity commentEntity = new Entity("Comment");
+      commentEntity.setProperty("comment", comment);
+      commentEntity.setProperty("timestamp", timestamp);
+      commentEntity.setProperty("email", email);
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      datastore.put(commentEntity);
+      response.sendRedirect("comments.html");
+    } else {
+      response.sendRedirect("/_ah/login?continue=%2Fcomments.html");  
+    }
   }
 
   private int getNumCommentsToLoad(HttpServletRequest request) {
