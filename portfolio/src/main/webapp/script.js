@@ -91,15 +91,36 @@ function drawChart() {
     Object.keys(AmazonData).forEach((year) => {
       data.addRow([year, AmazonData[year]]);
     });
-
     const options = {
       'title': 'Amazon Stock Price',
       'width':1200,
       'height':1000
     };
-
     const chart = new google.visualization.LineChart(
         document.getElementById('chart-container'));
+    chart.draw(data, options);
+  });
+}
+
+//google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawChart2);
+/** Fetches season data and uses it to create a chart. */
+function drawChart2() {
+  fetch('/color-data').then(response => response.json())
+  .then((seasonVotes) => {
+    const data = new google.visualization.DataTable();
+    data.addColumn('string', 'Season');
+    data.addColumn('number', 'Votes');
+    Object.keys(seasonVotes).forEach((season) => {
+      data.addRow([season, seasonVotes[season]]);
+    });
+    const options = {
+      'title': 'Favorite Seasons',
+      'width':600,
+      'height':500
+    };
+    const chart = new google.visualization.ColumnChart(
+        document.getElementById('chart2-container'));
     chart.draw(data, options);
   });
 }
