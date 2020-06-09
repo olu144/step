@@ -102,7 +102,7 @@ function drawChart() {
   });
 }
 
-//google.charts.load('current', {'packages':['corechart']});
+google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart2);
 /** Fetches season data and uses it to create a chart. */
 function drawChart2() {
