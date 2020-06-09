@@ -226,3 +226,15 @@ function createMap() {
     infowindow.open(map, marker);
   });
 }
+
+function createEvChargingMap() {
+  fetch("/ev-charging").then(response => response.json()).then((chargers) => {
+    const map = new google.maps.Map(
+      document.getElementById('ev_map'),
+      {center: {lat: 40.7128, lng: -74.0060}, zoom: 7});
+      chargers.forEach((POI) => {
+        new google.maps.Marker(
+          {position: {lat: POI.lat, lng: POI.lng}, map: map});
+      });
+  });
+}
