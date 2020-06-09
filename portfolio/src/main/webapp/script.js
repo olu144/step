@@ -113,6 +113,8 @@ function drawChart() {
     data.addRows([
       [1,  50, 70],
       [2,  130, 100],
+      [3,  120, 80],
+      [4,  180, 240],
       ]);
     var options = {
       chart: {
