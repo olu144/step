@@ -188,3 +188,9 @@ label {
   padding: 8px;
   font-family: Arial;
 }
+
+#map {
+  border: thin solid black;
+  height: 500px;
+  width: 500px;
+}
