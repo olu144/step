@@ -106,7 +106,7 @@ function drawChart() {
 google.charts.setOnLoadCallback(drawChart2);
 /** Fetches season data and uses it to create a chart. */
 function drawChart2() {
-  fetch('/color-data').then(response => response.json())
+  fetch('/season-data').then(response => response.json())
   .then((seasonVotes) => {
     const data = new google.visualization.DataTable();
     data.addColumn('string', 'Season');
