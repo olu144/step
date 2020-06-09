@@ -81,50 +81,25 @@ async function isLoggedIn() {
 
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);
-/** Creates a chart and adds it to the page. */
+/** Fetches Amazon Stock data and uses it to create a chart. */
 function drawChart() {
-  const data = new google.visualization.DataTable();
-  data.addColumn('string', 'Animal');
-  data.addColumn('number', 'Count');
-  data.addRows([
-    ['Lions', 10],
-    ['Tigers', 5],
-    ['Bears', 15],
-    ['Elephants', 4],
-    ['Snakes', 8]
-  ]);
-  const options = {
-    'title': 'Zoo Animals',
-    'pieHole': 0.4,
-    'width':500,
-    'height':400
-  };
-  const chart = new google.visualization.PieChart(document.getElementById('chart-div'));
-  chart.draw(data, options);
-}
-  google.charts.load('current', {'packages':['line']});
-  google.charts.setOnLoadCallback(drawChart2);
+  fetch('/amazon-data').then(response => response.json())
+  .then((AmazonData) => {
+    const data = new google.visualization.DataTable();
+    data.addColumn('string', 'Year');
+    data.addColumn('number', 'Price ($)');
+    Object.keys(AmazonData).forEach((year) => {
+      data.addRow([year, AmazonData[year]]);
+    });
 
-  function drawChart2() {
-    var data = new google.visualization.DataTable();
-    data.addColumn('number', 'Week');
-    data.addColumn('number', 'Stock A');
-    data.addColumn('number', 'Stock B');
-    data.addRows([
-      [1,  50, 70],
-      [2,  130, 100],
-      [3,  120, 80],
-      [4,  180, 240],
-      ]);
-    var options = {
-      chart: {
-        title: 'Weekly Performcance of Stock A and Stock B',
-        subtitle: 'in dollars (USD)'
-      },
-      width: 900,
-      height: 500
+    const options = {
+      'title': 'Amazon Stock Price',
+      'width':1200,
+      'height':1000
     };
-    var chart = new google.charts.Line(document.getElementById('linechart_material'));
-    chart.draw(data, google.charts.Line.convertOptions(options));
-  }
 
+    const chart = new google.visualization.LineChart(
+        document.getElementById('chart-container'));
+    chart.draw(data, options);
+  });
+}
