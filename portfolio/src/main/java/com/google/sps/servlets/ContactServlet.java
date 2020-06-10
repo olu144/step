@@ -36,11 +36,7 @@ public class ContactServlet extends HttpServlet {
     String email = getParameter(request, "email-input", "");
     String phone = getParameter(request, "phone-input", "");
     long timestamp = System.currentTimeMillis();
-<<<<<<< HEAD
-    if(email.strip() == "" && phone.strip()== "") {
-=======
     if (email.strip() == "" && phone.strip() == "") {
->>>>>>> master
       response.setContentType("text/html;");
       response.getWriter().println("You have not entered valid info, please go back and re-fill the form");
       return;
