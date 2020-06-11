@@ -73,6 +73,16 @@ function deleteComment() {
   fetch("/delete-list", {method: 'POST'})
 }
 
+function getMax() {
+  const maxElement = document.getElementById("maxwant");
+  const max = maxElement.options[maxElement.selectedIndex].value;
+  return max;
+}
+
+function deleteComment() {
+  fetch("/delete-list", {method: 'POST'})
+}
+
 async function isLoggedIn() {
   const response = await fetch('/login-status',);
   const status = await response.json();
