@@ -127,10 +127,11 @@ function drawChart2() {
 
 /** Creates a map and adds it to the page. */
 function createMap() {
-  const myLatLng = { lat: 36.964, lng: -122.015 };
+  const myLatLng = { lat: 50.3341, lng: 6.9427 };
   const map = new google.maps.Map(document.getElementById('map'), {
     center: myLatLng,
-    zoom: 16,
+    zoom: 15,
+    mapTypeId: 'satellite',
     styles: [
       {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
       {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
@@ -213,14 +214,14 @@ function createMap() {
     ]
   });
   map.setTilt(45);
-  var contentString = '<p>Santa Cruz Boardwalk</p> Amusement park offers a variety of games & rides right on a mile-long stretch of sandy beach. ';
+  var contentString = '<p>The Nurburgring</p>A 12.9 mile track that houses every type of track surface within a single lap';
   var infowindow = new google.maps.InfoWindow({
     content: contentString
   });
   const marker = new google.maps.Marker({
     position: myLatLng,
     map: map,
-    title: 'Santa Cruz Boardwalk'
+    title: 'Nurburgring Grand Prix Track'
   });
   marker.addListener('click', function() {
     infowindow.open(map, marker);
@@ -231,7 +232,88 @@ function createEvChargingMap() {
   fetch("/ev-charging").then(response => response.json()).then((chargers) => {
     const map = new google.maps.Map(
       document.getElementById('ev_map'),
-      {center: {lat: 40.7128, lng: -74.0060}, zoom: 7});
+      {center: {lat: 40.7128, lng: -74.0060}, zoom: 7,
+      styles: [
+      {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
+      {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
+      {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
+      {
+        featureType: 'administrative.locality',
+        elementType: 'labels.text.fill',
+        stylers: [{color: '#d59563'}]
+      },
+      {
+        featureType: 'poi',
+        elementType: 'labels.text.fill',
+        stylers: [{color: '#d59563'}]
+      },
+      {
+        featureType: 'poi.park',
+        elementType: 'geometry',
+        stylers: [{color: '#263c3f'}]
+      },
+      {
+        featureType: 'poi.park',
+        elementType: 'labels.text.fill',
+        stylers: [{color: '#6b9a76'}]
+      },
+      {
+        featureType: 'road',
+        elementType: 'geometry',
+        stylers: [{color: '#38414e'}]
+      },
+      {
+        featureType: 'road',
+        elementType: 'geometry.stroke',
+        stylers: [{color: '#212a37'}]
+      },
+      {
+        featureType: 'road',
+        elementType: 'labels.text.fill',
+        stylers: [{color: '#9ca5b3'}]
+      },
+      {
+        featureType: 'road.highway',
+        elementType: 'geometry',
+        stylers: [{color: '#746855'}]
+      },
+      {
+        featureType: 'road.highway',
+        elementType: 'geometry.stroke',
+        stylers: [{color: '#1f2835'}]
+      },
+      {
+        featureType: 'road.highway',
+        elementType: 'labels.text.fill',
+        stylers: [{color: '#f3d19c'}]
+      },
+      {
+        featureType: 'transit',
+        elementType: 'geometry',
+        stylers: [{color: '#2f3948'}]
+      },
+      {
+        featureType: 'transit.station',
+        elementType: 'labels.text.fill',
+        stylers: [{color: '#d59563'}]
+      },
+      {
+        featureType: 'water',
+        elementType: 'geometry',
+        stylers: [{color: '#17263c'}]
+      },
+      {
+        featureType: 'water',
+        elementType: 'labels.text.fill',
+        stylers: [{color: '#515c6d'}]
+      },
+      {
+        featureType: 'water',
+        elementType: 'labels.text.stroke',
+        stylers: [{color: '#17263c'}]
+      }
+    ]
+  });
       chargers.forEach((POI) => {
         new google.maps.Marker(
           {position: {lat: POI.lat, lng: POI.lng}, map: map});
