@@ -40,9 +40,9 @@ function addRandomStock() {
 }
 
 // Fetches comments from the server and adds them to the DOM.
-async function LoadComments() {
+async function loadComments() {
   const loggedIn = await isLoggedIn();
-  if(loggedIn) {
+  if (loggedIn) {
     const max = getMax();
     fetch('/data?numCommentsToLoad=' + max).then(response => response.json()).then((comments) => {
     const commentListElement = document.getElementById('comment-list');

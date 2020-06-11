@@ -36,7 +36,7 @@ public class ContactServlet extends HttpServlet {
     String email = getParameter(request, "email-input", "");
     String phone = getParameter(request, "phone-input", "");
     long timestamp = System.currentTimeMillis();
-    if(email.strip() == "" && phone.strip()== "") {
+    if (email.strip() == "" && phone.strip() == "") {
       response.setContentType("text/html;");
       response.getWriter().println("You have not entered valid info, please go back and re-fill the form");
       return;
@@ -50,8 +50,8 @@ public class ContactServlet extends HttpServlet {
     datastore.put(contactEntity);
     boolean emailContact = Boolean.parseBoolean(getParameter(request, "email", "false"));
     boolean phoneContact = Boolean.parseBoolean(getParameter(request, "phone", "false"));
-    String message="";
-    if (!emailContact && !phoneContact){
+    String message = "";
+    if (!emailContact && !phoneContact) {
       message = "Thank You " + name + ", you have not selected how you prefer to be contacted, I will reach out to you at ";
       if (email.strip() != "") {
         message += email;
