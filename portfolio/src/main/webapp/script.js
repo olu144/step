@@ -46,20 +46,20 @@ async function loadComments() {
     const max = getMax();
     fetch('/data?numCommentsToLoad=' + max).then(response => response.json()).then((comments) => {
     const commentListElement = document.getElementById('comment-list');
-    commentListElement.innerHTML = ' ';
+    commentListElement.innerHTML = '';
     comments.forEach((comment) => {
       commentListElement.appendChild(createListElement(comment));
       });
     });
   } else {
-    location.replace("/_ah/login?continue=%2Fcomments.html")
+    location.replace("/_ah/login?continue=%2Fcomments.html");
   }
 }
 
 // Creates an element that represents a comment
 function createListElement(comment) {
   const commentListElement = document.createElement('li');
-  commentListElement.innerText = comment.comment
+  commentListElement.innerText = comment.email + " : " + comment.comment
   return commentListElement;
 }
 
