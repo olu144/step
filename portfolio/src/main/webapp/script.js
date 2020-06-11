@@ -46,12 +46,12 @@ async function loadComments() {
     const max = getMax();
     fetch('/data?numCommentsToLoad=' + max).then(response => response.json()).then((comments) => {
     const commentListElement = document.getElementById('comment-list');
-    commentListElement.innerHTML = ' ';
+    commentListElement.innerHTML = '';
     comments.forEach((comment) => {
       commentListElement.appendChild(createListElement(comment));
       });
     });
-  }else{
+  } else {
     location.replace("/_ah/login?continue=%2Fcomments.html");
   }
 }
