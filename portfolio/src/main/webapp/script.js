@@ -80,7 +80,7 @@ async function isLoggedIn() {
 }
 
 /** Creates a chart and adds it to the page. */
-async function drawChart() {
+function drawChart() {
   const data = new google.visualization.DataTable();
   data.addColumn('string', 'Animal');
   data.addColumn('number', 'Count');
