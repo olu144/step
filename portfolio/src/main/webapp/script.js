@@ -40,18 +40,18 @@ function addRandomStock() {
 }
 
 // Fetches comments from the server and adds them to the DOM.
-async function LoadComments() {
+async function loadComments() {
   const loggedIn = await isLoggedIn();
-  if(loggedIn) {
+  if (loggedIn) {
     const max = getMax();
     fetch('/data?numCommentsToLoad=' + max).then(response => response.json()).then((comments) => {
     const commentListElement = document.getElementById('comment-list');
-    commentListElement.innerHTML = ' ';
+    commentListElement.innerHTML = '';
     comments.forEach((comment) => {
       commentListElement.appendChild(createListElement(comment));
       });
     });
-  }else{
+  } else {
     location.replace("/_ah/login?continue=%2Fcomments.html");
   }
 }
@@ -125,4 +125,3 @@ function drawChart() {
     var chart = new google.charts.Line(document.getElementById('linechart_material'));
     chart.draw(data, google.charts.Line.convertOptions(options));
   }
-
