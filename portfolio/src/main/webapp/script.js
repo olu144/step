@@ -79,10 +79,8 @@ async function isLoggedIn() {
   return status;
 }
 
-google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(drawChart);
 /** Creates a chart and adds it to the page. */
-function drawChart() {
+async function drawChart() {
   const data = new google.visualization.DataTable();
   data.addColumn('string', 'Animal');
   data.addColumn('number', 'Count');
@@ -100,4 +98,9 @@ function drawChart() {
   };
   const chart = new google.visualization.PieChart(document.getElementById('chart-container'));
   chart.draw(data, options);
+}
+
+function loadChartsApi() {
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
 }
