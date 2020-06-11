@@ -40,15 +40,20 @@ function addRandomStock() {
 }
 
 // Fetches comments from the server and adds them to the DOM.
-function LoadComments() {
-  const max = getMax();
-  fetch('/data?numCommentsToLoad=' + max).then(response => response.json()).then((comments) => {
-  const commentListElement = document.getElementById('comment-list');
-  commentListElement.innerHTML = ' ';
-  comments.forEach((comment) => {
-  commentListElement.appendChild(createListElement(comment));
+async function loadComments() {
+  const loggedIn = await isLoggedIn();
+  if (loggedIn) {
+    const max = getMax();
+    fetch('/data?numCommentsToLoad=' + max).then(response => response.json()).then((comments) => {
+    const commentListElement = document.getElementById('comment-list');
+    commentListElement.innerHTML = ' ';
+    comments.forEach((comment) => {
+      commentListElement.appendChild(createListElement(comment));
+      });
     });
-  });
+  } else {
+    location.replace("/_ah/login?continue=%2Fcomments.html")
+  }
 }
 
 // Creates an element that represents a comment
@@ -66,4 +71,10 @@ function getMax() {
 
 function deleteComment() {
   fetch("/delete-list", {method: 'POST'})
+}
+
+async function isLoggedIn() {
+  const response = await fetch('/login-status',);
+  const status = await response.json();
+  return status;
 }
