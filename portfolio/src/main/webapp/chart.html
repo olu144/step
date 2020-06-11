@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Google Virtual Zoo Population</title>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="script.js"></script>
+  </head>
+  <body>
+    <h1>Amazon Stock Price 2014-2018</h1>
+    <div id="chart-container"></div>
+    <h1>Favorite Seasons</h1>
+    <div id="chart2-container"></div>
+    <h2>Vote</h2>
+    <form action="/season-data" method="POST">
+      <select name="season">
+        <option value="Winter">Winter</option>
+        <option value="Spring">Spring</option>
+        <option value="Summer">Summer</option>
+        <option value="Autumn">Autumn</option>
+        <option value="Indifferent">Indifferent</option>
+      </select>
+      <button>Submit</button>
+    </form>
+  </body>
+</html>

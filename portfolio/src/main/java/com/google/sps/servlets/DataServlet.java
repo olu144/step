@@ -13,6 +13,7 @@
 // limitations under the License.
 
 package com.google.sps.servlets;
+
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -28,6 +29,8 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import java.util.List;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
@@ -46,8 +49,9 @@ public class DataServlet extends HttpServlet {
         long tempId = (long) commentEntity.getKey().getId();
         String tempComment = (String) commentEntity.getProperty("comment");
         long tempTimestamp = (long) commentEntity.getProperty("timestamp");
+        String email = (String) commentEntity.getProperty("email");
         if (tempComment != null && tempComment.strip() != "") {
-          Comment comment = new Comment(tempId, tempComment, tempTimestamp);
+          Comment comment = new Comment(tempId, tempComment, tempTimestamp, email);
           comments.add(comment);
         }
       }
@@ -59,14 +63,35 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String comment = request.getParameter("comment");
-    long timestamp = System.currentTimeMillis();
-    Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("comment", comment);
-    commentEntity.setProperty("timestamp", timestamp);
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(commentEntity);
-    response.sendRedirect("comments.html");
+    UserService userService = UserServiceFactory.getUserService();
+    if (userService.isUserLoggedIn()) {
+      String comment = request.getParameter("comment");
+      long timestamp = System.currentTimeMillis();
+      String email = userService.getCurrentUser().getEmail();
+      Entity commentEntity = new Entity("Comment");
+      commentEntity.setProperty("comment", comment);
+      commentEntity.setProperty("timestamp", timestamp);
+      commentEntity.setProperty("email", email);
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      datastore.put(commentEntity);
+      response.sendRedirect("comments.html");
+    } else {
+      response.sendRedirect("/_ah/login?continue=%2Fcomments.html");  
+    }
+  }
+
+  private int getNumCommentsToLoad(HttpServletRequest request) {
+    // Get the input from the form.
+    String numCommentsToLoadString = request.getParameter("numCommentsToLoad");
+    // Convert the input to an int.
+    int numCommentsToLoad;
+    try {
+      numCommentsToLoad = Integer.parseInt(numCommentsToLoadString);
+    } catch (NumberFormatException e) {
+      System.err.println("Could not convert to int: " + numCommentsToLoadString);
+      return -1;
+    }
+    return numCommentsToLoad;
   }
 
   private int getNumCommentsToLoad(HttpServletRequest request) {

@@ -59,7 +59,7 @@ async function loadComments() {
 // Creates an element that represents a comment
 function createListElement(comment) {
   const commentListElement = document.createElement('li');
-  commentListElement.innerText = comment.comment
+  commentListElement.innerText = comment.email + " : " + comment.comment
   return commentListElement;
 }
 
@@ -77,4 +77,164 @@ async function isLoggedIn() {
   const response = await fetch('/login-status',);
   const status = await response.json();
   return status;
+}
+
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawChart);
+/** Fetches Amazon Stock data and uses it to create a chart. */
+function drawChart() {
+  fetch('/amazon-data').then(response => response.json())
+  .then((AmazonData) => {
+    const data = new google.visualization.DataTable();
+    data.addColumn('string', 'Year');
+    data.addColumn('number', 'Price ($)');
+    Object.keys(AmazonData).forEach((year) => {
+      data.addRow([year, AmazonData[year]]);
+    });
+    const options = {
+      'title': 'Amazon Stock Price',
+      'width':1200,
+      'height':1000
+    };
+    const chart = new google.visualization.LineChart(
+        document.getElementById('chart-container'));
+    chart.draw(data, options);
+  });
+}
+
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawChart2);
+/** Fetches season data and uses it to create a chart. */
+function drawChart2() {
+  fetch('/season-data').then(response => response.json())
+  .then((seasonVotes) => {
+    const data = new google.visualization.DataTable();
+    data.addColumn('string', 'Season');
+    data.addColumn('number', 'Votes');
+    Object.keys(seasonVotes).forEach((season) => {
+      data.addRow([season, seasonVotes[season]]);
+    });
+    const options = {
+      'title': 'Favorite Seasons',
+      'width':600,
+      'height':500
+    };
+    const chart = new google.visualization.ColumnChart(
+        document.getElementById('chart2-container'));
+    chart.draw(data, options);
+  });
+}
+
+/** Creates a map and adds it to the page. */
+function createMap() {
+  const myLatLng = { lat: 36.964, lng: -122.015 };
+  const map = new google.maps.Map(document.getElementById('map'), {
+    center: myLatLng,
+    zoom: 16,
+    styles: [
+      {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
+      {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
+      {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
+      {
+        featureType: 'administrative.locality',
+        elementType: 'labels.text.fill',
+        stylers: [{color: '#d59563'}]
+      },
+      {
+        featureType: 'poi',
+        elementType: 'labels.text.fill',
+        stylers: [{color: '#d59563'}]
+      },
+      {
+        featureType: 'poi.park',
+        elementType: 'geometry',
+        stylers: [{color: '#263c3f'}]
+      },
+      {
+        featureType: 'poi.park',
+        elementType: 'labels.text.fill',
+        stylers: [{color: '#6b9a76'}]
+      },
+      {
+        featureType: 'road',
+        elementType: 'geometry',
+        stylers: [{color: '#38414e'}]
+      },
+      {
+        featureType: 'road',
+        elementType: 'geometry.stroke',
+        stylers: [{color: '#212a37'}]
+      },
+      {
+        featureType: 'road',
+        elementType: 'labels.text.fill',
+        stylers: [{color: '#9ca5b3'}]
+      },
+      {
+        featureType: 'road.highway',
+        elementType: 'geometry',
+        stylers: [{color: '#746855'}]
+      },
+      {
+        featureType: 'road.highway',
+        elementType: 'geometry.stroke',
+        stylers: [{color: '#1f2835'}]
+      },
+      {
+        featureType: 'road.highway',
+        elementType: 'labels.text.fill',
+        stylers: [{color: '#f3d19c'}]
+      },
+      {
+        featureType: 'transit',
+        elementType: 'geometry',
+        stylers: [{color: '#2f3948'}]
+      },
+      {
+        featureType: 'transit.station',
+        elementType: 'labels.text.fill',
+        stylers: [{color: '#d59563'}]
+      },
+      {
+        featureType: 'water',
+        elementType: 'geometry',
+        stylers: [{color: '#17263c'}]
+      },
+      {
+        featureType: 'water',
+        elementType: 'labels.text.fill',
+        stylers: [{color: '#515c6d'}]
+      },
+      {
+        featureType: 'water',
+        elementType: 'labels.text.stroke',
+        stylers: [{color: '#17263c'}]
+      }
+    ]
+  });
+  map.setTilt(45);
+  var contentString = '<p>Santa Cruz Boardwalk</p> Amusement park offers a variety of games & rides right on a mile-long stretch of sandy beach. ';
+  var infowindow = new google.maps.InfoWindow({
+    content: contentString
+  });
+  const marker = new google.maps.Marker({
+    position: myLatLng,
+    map: map,
+    title: 'Santa Cruz Boardwalk'
+  });
+  marker.addListener('click', function() {
+    infowindow.open(map, marker);
+  });
+}
+
+function createEvChargingMap() {
+  fetch("/ev-charging").then(response => response.json()).then((chargers) => {
+    const map = new google.maps.Map(
+      document.getElementById('ev_map'),
+      {center: {lat: 40.7128, lng: -74.0060}, zoom: 7});
+      chargers.forEach((POI) => {
+        new google.maps.Marker(
+          {position: {lat: POI.lat, lng: POI.lng}, map: map});
+      });
+  });
 }
