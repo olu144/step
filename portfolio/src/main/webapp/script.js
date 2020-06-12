@@ -40,18 +40,18 @@ function addRandomStock() {
 }
 
 // Fetches comments from the server and adds them to the DOM.
-async function LoadComments() {
+async function loadComments() {
   const loggedIn = await isLoggedIn();
-  if(loggedIn) {
+  if (loggedIn) {
     const max = getMax();
     fetch('/data?numCommentsToLoad=' + max).then(response => response.json()).then((comments) => {
     const commentListElement = document.getElementById('comment-list');
-    commentListElement.innerHTML = ' ';
+    commentListElement.innerHTML = '';
     comments.forEach((comment) => {
       commentListElement.appendChild(createListElement(comment));
       });
     });
-  }else{
+  } else {
     location.replace("/_ah/login?continue=%2Fcomments.html");
   }
 }
@@ -79,8 +79,6 @@ async function isLoggedIn() {
   return status;
 }
 
-google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(drawChart);
 /** Fetches Amazon Stock data and uses it to create a chart. */
 function drawChart() {
   fetch('/amazon-data').then(response => response.json())
@@ -96,14 +94,11 @@ function drawChart() {
       'width':1200,
       'height':1000
     };
-    const chart = new google.visualization.LineChart(
-        document.getElementById('chart-container'));
+    const chart = new google.visualization.LineChart(document.getElementById('chart-container'));
     chart.draw(data, options);
   });
 }
 
-google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(drawChart2);
 /** Fetches season data and uses it to create a chart. */
 function drawChart2() {
   fetch('/season-data').then(response => response.json())
@@ -237,4 +232,14 @@ function createEvChargingMap() {
           {position: {lat: POI.lat, lng: POI.lng}, map: map});
       });
   });
+}
+
+function loadChartsApi() {
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+}
+
+function loadChartsApi2() {
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(drawChart2);
 }

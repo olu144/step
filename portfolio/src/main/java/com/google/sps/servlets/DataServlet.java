@@ -93,19 +93,4 @@ public class DataServlet extends HttpServlet {
     }
     return numCommentsToLoad;
   }
-
-  private int getNumCommentsToLoad(HttpServletRequest request) {
-    // Get the input from the form.
-    String numCommentsToLoadString = request.getParameter("numCommentsToLoad");
-    // Convert the input to an int.
-    int numCommentsToLoad;
-    try {
-      numCommentsToLoad = Integer.parseInt(numCommentsToLoadString);
-    } catch (NumberFormatException e) {
-      System.err.println("Could not convert to int: " + numCommentsToLoadString);
-      return -1;
-    }
-    return numCommentsToLoad;
-  }
 }
-
