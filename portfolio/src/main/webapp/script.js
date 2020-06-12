@@ -82,12 +82,12 @@ async function isLoggedIn() {
 /** Fetches Amazon Stock data and uses it to create a chart. */
 function drawChart() {
   fetch('/amazon-data').then(response => response.json())
-  .then((AmazonData) => {
+  .then((amazonData) => {
     const data = new google.visualization.DataTable();
     data.addColumn('string', 'Year');
     data.addColumn('number', 'Price ($)');
-    Object.keys(AmazonData).forEach((year) => {
-      data.addRow([year, AmazonData[year]]);
+    Object.keys(amazonData).forEach((year) => {
+      data.addRow([year, amazonData[year]]);
     });
     const options = {
       'title': 'Amazon Stock Price',
