@@ -123,11 +123,7 @@ function drawChart2() {
 }
 
 function loadChartsApi() {
-  google.charts.load('current', {'packages':['corechart']});
+  google.charts.load('current', {'packages':['corechart', 'line']});
   google.charts.setOnLoadCallback(drawChart);
-}
-
-function loadChartsApi2() {
-  google.charts.load('current', {'packages':['line']});
   google.charts.setOnLoadCallback(drawChart2);
 }
