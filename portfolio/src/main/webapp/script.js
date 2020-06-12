@@ -80,7 +80,7 @@ async function isLoggedIn() {
 }
 
 /** Creates a chart and adds it to the page. */
-function drawChart() {
+function drawAnimalChart() {
   const data = new google.visualization.DataTable();
   data.addColumn('string', 'Animal');
   data.addColumn('number', 'Count');
@@ -101,7 +101,7 @@ function drawChart() {
   chart.draw(data, options);
 }
 
-function drawChart2() {
+function drawStockChart() {
   var data = new google.visualization.DataTable();
   data.addColumn('number', 'Week');
   data.addColumn('number', 'Stock A');
@@ -124,6 +124,6 @@ function drawChart2() {
 
 function loadChartsApi() {
   google.charts.load('current', {'packages':['corechart', 'line']});
-  google.charts.setOnLoadCallback(drawChart);
-  google.charts.setOnLoadCallback(drawChart2);
+  google.charts.setOnLoadCallback(drawAnimalChart);
+  google.charts.setOnLoadCallback(drawStockChart);
 }
