@@ -200,3 +200,8 @@ label {
   height: 1000px;
   width: 1000px;
 }
+
+div.chart-container {
+    width: auto;
+    margin: 0 auto;
+}

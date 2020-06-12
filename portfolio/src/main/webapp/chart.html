@@ -5,12 +5,14 @@
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="script.js"></script>
   </head>
-  <body>
+  <body onload=loadChartsApi();loadChartsApi2();>
+    <h1>Amazon Stock Price 2014-2018</h1>
+    <div id="chart-container"></div>
     <h1>Favorite Seasons</h1>
     <div id="chart2-container"></div>
     <h2>Vote</h2>
     <form action="/season-data" method="POST">
-      <select name="color">
+      <select name="season">
         <option value="Winter">Winter</option>
         <option value="Spring">Spring</option>
         <option value="Summer">Summer</option>
