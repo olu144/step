@@ -59,7 +59,7 @@ async function loadComments() {
 // Creates an element that represents a comment
 function createListElement(comment) {
   const commentListElement = document.createElement('li');
-  commentListElement.innerText = comment.email + " : " + comment.comment
+  commentListElement.innerText = comment.email + " : " + comment.comment;
   return commentListElement;
 }
 
@@ -320,4 +320,28 @@ function loadChartsApi() {
   google.charts.load('current', {'packages':['corechart']});
   google.charts.setOnLoadCallback(drawStockChart);
   google.charts.setOnLoadCallback(drawAnimalChart);
+}
+
+function loadPerspectiveList() {
+  fetch('/data?numCommentsToLoad=' + 3).then(response => response.json()).then((comments) => {
+    const PerspectiveList = document.getElementById('perspective-list');
+    PerspectiveList.innerHTML = ''
+    comments.forEach((comment) => {
+      fetch('https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=AIzaSyC50_6RYLDFuVsX91aCSbTP7BsKaVE-fMY',
+      {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({comment: {text: comment.comment}, languages: [], requestedAttributes: { TOXICITY: {} }})})
+        .then(response => response.json())
+        .then(data => {
+          PerspectiveList.appendChild(createPerspectiveListElement("Comment: "+"'"+comment.comment+"'"+" | "+"Toxicity Score: "+ data.attributeScores.TOXICITY.summaryScore.value));
+        });
+    });
+  });
+}
+
+function createPerspectiveListElement(comment) {
+  const commentListElement = document.createElement('li');
+  commentListElement.innerText = comment;
+  return commentListElement;
 }

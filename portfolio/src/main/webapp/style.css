@@ -205,3 +205,11 @@ div.chart-container {
     width: auto;
     margin: 0 auto;
 }
+
+#perspective-list {
+  margin-top: 3px;
+  color: white;
+  size: 20px;
+  background: gray; 
+  font-size: 30px;
+}
