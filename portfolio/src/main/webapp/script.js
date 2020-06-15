@@ -209,8 +209,8 @@ function createMap() {
     ]
   });
   map.setTilt(45);
-  var contentString = '<p>The Nurburgring</p>A 12.9 mile track that houses every type of track surface within a single lap';
-  var infowindow = new google.maps.InfoWindow({
+  const contentString = '<p>The Nurburgring</p>A 12.9 mile track that houses every type of track surface within a single lap';
+  const infowindow = new google.maps.InfoWindow({
     content: contentString
   });
   const marker = new google.maps.Marker({
