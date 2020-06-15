@@ -102,7 +102,7 @@ function drawAnimalChart() {
 }
 
 function drawStockChart() {
-  var data = new google.visualization.DataTable();
+  const data = new google.visualization.DataTable();
   data.addColumn('number', 'Week');
   data.addColumn('number', 'Stock A');
   data.addColumn('number', 'Stock B');
@@ -110,7 +110,7 @@ function drawStockChart() {
     [1,  50, 70],
     [2,  130, 100],
   ]);
-  var options = {
+  const options = {
     chart: {
       title: 'Weekly Performcance of Stock A and Stock B',
       subtitle: 'in dollars (USD)'
@@ -118,7 +118,7 @@ function drawStockChart() {
     width: 900,
     height: 500
   };
-  var chart = new google.charts.Line(document.getElementById('linechart_material'));
+  const chart = new google.charts.Line(document.getElementById('linechart_material'));
   chart.draw(data, google.charts.Line.convertOptions(options));
 }
 
