@@ -327,7 +327,7 @@ function loadPerspectiveList() {
     const PerspectiveList = document.getElementById('perspective-list');
     PerspectiveList.innerHTML = ''
     comments.forEach((comment) => {
-      fetch('https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=AIzaSyC50_6RYLDFuVsX91aCSbTP7BsKaVE-fMY',
+      fetch('https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=NOT_HERE',
       {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
