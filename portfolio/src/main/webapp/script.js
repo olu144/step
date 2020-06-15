@@ -80,7 +80,7 @@ async function isLoggedIn() {
 }
 
 /** Fetches Amazon Stock data and uses it to create a chart. */
-function drawChart() {
+function drawStockChart() {
   fetch('/amazon-data').then(response => response.json())
   .then((amazonData) => {
     const data = new google.visualization.DataTable();
@@ -101,6 +101,5 @@ function drawChart() {
 
 function loadChartsApi() {
   google.charts.load('current', {'packages':['corechart']});
-  google.charts.setOnLoadCallback(drawChart);
+  google.charts.setOnLoadCallback(drawStockChart);
 }
-
