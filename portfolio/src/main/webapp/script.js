@@ -80,14 +80,14 @@ async function isLoggedIn() {
 }
 
 /** Fetches Amazon Stock data and uses it to create a chart. */
-function drawChart() {
+function drawStockChart() {
   fetch('/amazon-data').then(response => response.json())
-  .then((AmazonData) => {
+  .then((amazonData) => {
     const data = new google.visualization.DataTable();
     data.addColumn('string', 'Year');
     data.addColumn('number', 'Price ($)');
-    Object.keys(AmazonData).forEach((year) => {
-      data.addRow([year, AmazonData[year]]);
+    Object.keys(amazonData).forEach((year) => {
+      data.addRow([year, amazonData[year]]);
     });
     const options = {
       'title': 'Amazon Stock Price',
@@ -100,7 +100,7 @@ function drawChart() {
 }
 
 /** Fetches season data and uses it to create a chart. */
-function drawChart2() {
+function drawAnimalChart() {
   fetch('/season-data').then(response => response.json())
   .then((seasonVotes) => {
     const data = new google.visualization.DataTable();
@@ -236,10 +236,6 @@ function createEvChargingMap() {
 
 function loadChartsApi() {
   google.charts.load('current', {'packages':['corechart']});
-  google.charts.setOnLoadCallback(drawChart);
-}
-
-function loadChartsApi2() {
-  google.charts.load('current', {'packages':['corechart']});
-  google.charts.setOnLoadCallback(drawChart2);
+  google.charts.setOnLoadCallback(drawStockChart);
+  google.charts.setOnLoadCallback(drawAnimalChart);
 }

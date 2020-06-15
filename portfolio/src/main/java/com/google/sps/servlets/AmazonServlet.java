@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 /** Returns bigfoot data as a JSON object, e.g. {"2017": 52, "2018": 34}] */
 @WebServlet("/amazon-data")
 public class AmazonServlet extends HttpServlet {
-  private LinkedHashMap<String, Float> AmazonData = new LinkedHashMap<>();
+  private LinkedHashMap<String, Float> amazonData = new LinkedHashMap<>();
 
   @Override
   public void init() {
@@ -27,7 +27,7 @@ public class AmazonServlet extends HttpServlet {
       Float close = Float.valueOf(cells[4]);
       Float adjClose = Float.valueOf(cells[5]);
       Float volume = Float.valueOf(cells[6]);
-      AmazonData.put(date, adjClose);
+      amazonData.put(date, adjClose);
     }
     scanner.close();
   }
@@ -36,7 +36,7 @@ public class AmazonServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
     Gson gson = new Gson();
-    String json = gson.toJson(AmazonData);
+    String json = gson.toJson(amazonData);
     response.getWriter().println(json);
   }
 }
