@@ -19,34 +19,38 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     long duration = request.getDuration();
     Collection<String> attendees = request.getAttendees();
-    Collection<String> optionalAttendees = request.getOptionalAttendees();
-    ArrayList<Event> validEvents = new ArrayList<Event>();
     ArrayList<TimeRange> validTimes = new ArrayList<TimeRange>();
     ArrayList<TimeRange> output = new ArrayList<TimeRange>();  
-    //ArrayList<TimeRange> final = new ArrayList<TimeRange>();  
+    ArrayList<TimeRange> finalOutput = new ArrayList<TimeRange>();  
+    int newStart;
+    int newEnd;
 
     if (attendees.isEmpty()) {
       return Arrays.asList(TimeRange.WHOLE_DAY);
     }
+
     if (duration >= TimeRange.WHOLE_DAY.duration()) {
       return Arrays.asList();  
     }
+
     for (Event e: events) {
       if (!e.getAttendees().isEmpty()) {
         validTimes.add(e.getWhen());
         }
-    }
-    Collections.sort(validTimes, TimeRange.ORDER_BY_START);
-    if(validTimes.size() > 1){
+    }  
+
+    if (validTimes.size() > 1){
       for (int i = 1; i < validTimes.size(); i++){
-        if(validTimes.get(i-1).overlaps(validTimes.get(i))){
-          int newStart = Math.min(validTimes.get(i-1).start(), validTimes.get(i).start());
-          int newEnd = Math.max(validTimes.get(i).end(), validTimes.get(i-1).end());
+        if (validTimes.get(i-1).overlaps(validTimes.get(i))){
+          newStart = Math.min(validTimes.get(i-1).start(), validTimes.get(i).start());
+          newEnd = Math.max(validTimes.get(i).end(), validTimes.get(i-1).end());
           output.add(TimeRange.fromStartEnd(newStart, newEnd, false));
         } else {
           output.add(validTimes.get(i-1));
@@ -55,8 +59,33 @@ public final class FindMeetingQuery {
       }
     } else {
       output = validTimes;
-    }  
-    return output;
-    //return Arrays.asList(TimeRange.fromStartEnd(TimeRange.START_OF_DAY, output.get(0).start(), false), TimeRange.fromStartEnd(output.get(0).end(), TimeRange.END_OF_DAY, true));
+    }
+
+    if(output.isEmpty()) {
+      return Arrays.asList(TimeRange.WHOLE_DAY);    
+    }
+
+    if(output.get(0).start() - TimeRange.START_OF_DAY >= duration) {
+      newStart = TimeRange.START_OF_DAY;
+      newEnd = output.get(0).start();
+      finalOutput.add(TimeRange.fromStartEnd(newStart, newEnd, false));    
+    }
+
+    for (int i = 0; i < output.size() - 1; i++) {
+      if(output.get(i+1).start() - output.get(i).end() >= duration){
+          newStart = output.get(i).end();
+          newEnd = output.get(i+1).start();
+          finalOutput.add(TimeRange.fromStartEnd(newStart, newEnd, false));
+      }
+    }
+
+    if(TimeRange.END_OF_DAY - output.get(output.size() - 1).end() >= duration) {
+        newStart = output.get(output.size()-1).end();
+        newEnd = TimeRange.END_OF_DAY;
+      finalOutput.add(TimeRange.fromStartEnd(newStart,newEnd , true));
+    }
+
+    return finalOutput;
+
   }
 }
