@@ -21,7 +21,12 @@ public class Greeter {
   /**
    * Returns a greeting for the given name.
    */
-  public String greet(String name) {
-    return "Hello " + name;
+  public String greet(String name) {  
+    String[] letters = name.split("\\W+");
+    String lettersOnly = "";
+    for (String letter : letters) { 
+      lettersOnly += letter; 
+    }     
+    return "Hello " + lettersOnly;
   }
 }
