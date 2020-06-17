@@ -40,9 +40,14 @@ public final class FindMeetingQuery {
       return Arrays.asList();  
     }
     //add the times for all meetings where there are attendees
-    for (Event e: events) {
-      if (!e.getAttendees().isEmpty()) {
-        validTimes.add(e.getWhen());
+    for (Event event: events) {
+      if (!event.getAttendees().isEmpty()) {
+        for(String requestAttendee : requestAttendees){
+          if(event.getAttendees().contains(requestAttendee)){
+            validTimes.add(event.getWhen());
+            break;
+          }
+        }
       }
     }
     //if there are no meetings with attendees the whole day is returned 
@@ -51,7 +56,7 @@ public final class FindMeetingQuery {
     }  
     //if there are multiple meetings consolidate overlapping meetings into one range of time
     if (validTimes.size() > 1){
-      for (int i = 1; i < validTimes.size(); i++){
+      for (int i = 1; i < validTimes.size(); i ++){
         if (validTimes.get(i - 1).overlaps(validTimes.get(i))){
           newStart = Math.min(validTimes.get(i - 1).start(), validTimes.get(i).start());
           newEnd = Math.max(validTimes.get(i).end(), validTimes.get(i - 1).end());
@@ -71,17 +76,17 @@ public final class FindMeetingQuery {
       availableTimes.add(TimeRange.fromStartEnd(newStart, newEnd, false));    
     }
     //if there are adequate time between meetings add those time ranges to the output list
-    for (int i = 0; i < noOverlap.size() - 1; i++) {
+    for (int i = 0; i < noOverlap.size() - 1; i ++) {
       if(noOverlap.get(i + 1).start() - noOverlap.get(i).end() >= requestDuration){
-          newStart = noOverlap.get(i).end();
-          newEnd = noOverlap.get(i + 1).start();
-          availableTimes.add(TimeRange.fromStartEnd(newStart, newEnd, false));
+        newStart = noOverlap.get(i).end();
+        newEnd = noOverlap.get(i + 1).start();
+        availableTimes.add(TimeRange.fromStartEnd(newStart, newEnd, false));
       }
     }
     //if there is adequate time between the end of the day and the end of the last meeting add that time range to the output list   
     if(TimeRange.END_OF_DAY - noOverlap.get(noOverlap.size() - 1).end() >= requestDuration) {
-        newStart = noOverlap.get(noOverlap.size() - 1).end();
-        newEnd = TimeRange.END_OF_DAY;
+      newStart = noOverlap.get(noOverlap.size() - 1).end();
+      newEnd = TimeRange.END_OF_DAY;
       availableTimes.add(TimeRange.fromStartEnd(newStart,newEnd , true));
     }
     //return the list of available time ranges
