@@ -46,7 +46,7 @@ public final class FindMeetingQuery {
     validTimes = addValidTimes(events, request);
     validTimesWOptional = addValidTimesWithOptional(events, request, validTimes);
     //if there are no meetings with attendees the whole day is returned 
-    if(validTimes.isEmpty()) {
+    if(validTimes.isEmpty() && validTimesWOptional.isEmpty()) {
       return Arrays.asList(TimeRange.WHOLE_DAY);    
     }  
     noOverlap = removeOverlap(validTimes);
@@ -107,14 +107,13 @@ public final class FindMeetingQuery {
     validTimesWithOptional.addAll(withoutOptional);
     if(!optionalAttendees.isEmpty()){
       for (Event event: events) {
-        if (!event.getAttendees().isEmpty()) {
-          for(String attendee : optionalAttendees){
-            if(event.getAttendees().contains(attendee)){
-              validTimesWithOptional.add(event.getWhen());
-            }
-          }
+        for(String attendee : optionalAttendees){
+          if(event.getAttendees().contains(attendee)){
+            validTimesWithOptional.add(event.getWhen());
+            break;
+          } 
         }
-      }
+      } 
     }
     return validTimesWithOptional; 
   }
@@ -124,6 +123,9 @@ public final class FindMeetingQuery {
     ArrayList<TimeRange> availableRanges = new ArrayList<TimeRange>();
     int newStart;
     int newEnd;
+    if(occupiedTimes.isEmpty()){
+        return occupiedTimes;
+    }
     //if there is adequate time between the beginning of the day and the beginning of the first meeting add that time range to the output list   
     if(occupiedTimes.get(0).start() - TimeRange.START_OF_DAY >= requestDuration) {
       newStart = TimeRange.START_OF_DAY;
