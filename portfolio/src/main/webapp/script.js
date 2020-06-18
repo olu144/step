@@ -118,7 +118,7 @@ function drawStockChart() {
     width: 900,
     height: 500
   };
-  const chart = new google.charts.Line(document.getElementById('linechart_material'));
+  const chart = new google.charts.Line(document.getElementById('linechart-material'));
   chart.draw(data, google.charts.Line.convertOptions(options));
 }
 
