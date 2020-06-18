@@ -226,7 +226,7 @@ function createMap() {
 function createEvChargingMap() {
   fetch("/ev-charging").then(response => response.json()).then((chargers) => {
     const map = new google.maps.Map(
-      document.getElementById('ev_map'),
+      document.getElementById("ev-map"),
       {center: {lat: 40.7128, lng: -74.0060}, zoom: 7,
       styles: [
       {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
@@ -327,7 +327,7 @@ function loadPerspectiveList() {
     const PerspectiveList = document.getElementById('perspective-list');
     PerspectiveList.innerHTML = ''
     comments.forEach((comment) => {
-      fetch('https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=',
+      fetch('https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=NOT_HERE',
       {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
