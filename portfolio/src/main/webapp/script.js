@@ -79,26 +79,24 @@ async function isLoggedIn() {
   return status;
 }
 
-/** Creates a chart and adds it to the page. */
-function drawAnimalChart() {
-  const data = new google.visualization.DataTable();
-  data.addColumn('string', 'Animal');
-  data.addColumn('number', 'Count');
-  data.addRows([
-    ['Lions', 10],
-    ['Tigers', 5],
-    ['Bears', 15],
-    ['Elephants', 4],
-    ['Snakes', 8]
-  ]);
-  const options = {
-    'title': 'Zoo Animals',
-    'pieHole': 0.4,
-    'width':500,
-    'height':400
-  };
-  const chart = new google.visualization.PieChart(document.getElementById('chart-div'));
-  chart.draw(data, options);
+/** Fetches Amazon Stock data and uses it to create a chart. */
+function drawStockChart() {
+  fetch('/amazon-data').then(response => response.json())
+  .then((amazonData) => {
+    const data = new google.visualization.DataTable();
+    data.addColumn('string', 'Year');
+    data.addColumn('number', 'Price ($)');
+    Object.keys(amazonData).forEach((year) => {
+      data.addRow([year, amazonData[year]]);
+    });
+    const options = {
+      'title': 'Amazon Stock Price',
+      'width':1200,
+      'height':1000
+    };
+    const chart = new google.visualization.LineChart(document.getElementById('chart-container'));
+    chart.draw(data, options);
+  });
 }
 
 function drawStockChart() {
@@ -123,7 +121,6 @@ function drawStockChart() {
 }
 
 function loadChartsApi() {
-  google.charts.load('current', {'packages':['corechart', 'line']});
-  google.charts.setOnLoadCallback(drawAnimalChart);
+  google.charts.load('current', {'packages':['corechart']});
   google.charts.setOnLoadCallback(drawStockChart);
 }
