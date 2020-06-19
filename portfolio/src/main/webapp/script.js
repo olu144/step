@@ -99,6 +99,27 @@ function drawStockChart() {
   });
 }
 
+function drawStockChart() {
+  const data = new google.visualization.DataTable();
+  data.addColumn('number', 'Week');
+  data.addColumn('number', 'Stock A');
+  data.addColumn('number', 'Stock B');
+  data.addRows([
+    [1,  50, 70],
+    [2,  130, 100],
+  ]);
+  const options = {
+    chart: {
+      title: 'Weekly Performcance of Stock A and Stock B',
+      subtitle: 'in dollars (USD)'
+    },
+    width: 900,
+    height: 500
+  };
+  const chart = new google.charts.Line(document.getElementById('linechart-material'));
+  chart.draw(data, google.charts.Line.convertOptions(options));
+}
+
 function loadChartsApi() {
   google.charts.load('current', {'packages':['corechart']});
   google.charts.setOnLoadCallback(drawStockChart);
