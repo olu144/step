@@ -100,7 +100,7 @@ function drawStockChart() {
 }
 
 /** Fetches season data and uses it to create a chart. */
-function drawAnimalChart() {
+function drawSeasonChart() {
   fetch('/season-data').then(response => response.json())
   .then((seasonVotes) => {
     const data = new google.visualization.DataTable();
@@ -226,7 +226,7 @@ function createMap() {
 function createEvChargingMap() {
   fetch("/ev-charging").then(response => response.json()).then((chargers) => {
     const map = new google.maps.Map(
-      document.getElementById('ev_map'),
+      document.getElementById("ev-map"),
       {center: {lat: 40.7128, lng: -74.0060}, zoom: 7,
       styles: [
       {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
