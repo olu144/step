@@ -208,10 +208,17 @@ function createMap() {
     ]
   });
   map.setTilt(45);
+  var contentString = '<p>Santa Cruz Boardwalk</p> Amusement park offers a variety of games & rides right on a mile-long stretch of sandy beach. ';
+  var infowindow = new google.maps.InfoWindow({
+    content: contentString
+  });
   const marker = new google.maps.Marker({
     position: myLatLng,
     map: map,
     title: 'Santa Cruz Boardwalk'
+  });
+  marker.addListener('click', function() {
+    infowindow.open(map, marker);
   });
 }
 
