@@ -24,30 +24,24 @@ import java.util.Set;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    long requestDuration = request.getDuration();
-    Collection<String> requestAttendees = request.getAttendees();
     Collection<String> optionalAttendees = new ArrayList<String>();
     // this try-catch avoids a potential NullPointerException
     try {
       optionalAttendees = request.getOptionalAttendees();
     } catch(Exception e) {
     }
-    ArrayList<TimeRange> alreadyBookedTimes = new ArrayList<TimeRange>();
-    ArrayList<TimeRange> alreadyBookedTimesWOptional = new ArrayList<TimeRange>();
-    ArrayList<TimeRange> noOverlap = new ArrayList<TimeRange>();
-    ArrayList<TimeRange> noOverlapWOptional = new ArrayList<TimeRange>();    
-    ArrayList<TimeRange> availableTimes = new ArrayList<TimeRange>();
-    ArrayList<TimeRange> availableTimesWOptional = new ArrayList<TimeRange>();  
-    int newStart;
-    int newEnd;
-    // edge case: if there are no attendees the whole day is returned        
+    // edge case: if there are no attendees the whole day is returned
+    Collection<String> requestAttendees = request.getAttendees();        
     if (requestAttendees.isEmpty() && optionalAttendees.isEmpty()) {
       return Arrays.asList(TimeRange.WHOLE_DAY);
     }
     // edge case: if the requested meeting is longer than a day there are no options
+    long requestDuration = request.getDuration();
     if (requestDuration >= TimeRange.WHOLE_DAY.duration()) {
       return Arrays.asList();  
     }
+    ArrayList<TimeRange> alreadyBookedTimes = new ArrayList<TimeRange>();
+    ArrayList<TimeRange> alreadyBookedTimesWOptional = new ArrayList<TimeRange>();
     alreadyBookedTimes = getAlreadyBookedTimes(events, request);
     if (!optionalAttendees.isEmpty()) {
       alreadyBookedTimesWOptional = getAlreadyBookedTimesWithOptional(events, request, alreadyBookedTimes);
@@ -55,9 +49,13 @@ public final class FindMeetingQuery {
     // if there are no meetings the whole day is returned 
     if (alreadyBookedTimes.isEmpty() && alreadyBookedTimesWOptional.isEmpty()) {
      return Arrays.asList(TimeRange.WHOLE_DAY);    
-    }  
+    }
+    ArrayList<TimeRange> noOverlap = new ArrayList<TimeRange>();
+    ArrayList<TimeRange> noOverlapWOptional = new ArrayList<TimeRange>();  
     noOverlap = removeOverlap(alreadyBookedTimes);
     noOverlapWOptional = removeOverlap(alreadyBookedTimesWOptional);
+    ArrayList<TimeRange> availableTimes = new ArrayList<TimeRange>();
+    ArrayList<TimeRange> availableTimesWOptional = new ArrayList<TimeRange>();
     availableTimesWOptional = addAvailableRanges(request, noOverlapWOptional);
     availableTimes = addAvailableRanges(request, noOverlap);
     // return the list of available time ranges
@@ -89,7 +87,7 @@ public final class FindMeetingQuery {
     } else {
       return times;
     }
-      return noOverlap;
+    return noOverlap;
   }
 
   // add the times for all meetings where there are mandatory attendees
