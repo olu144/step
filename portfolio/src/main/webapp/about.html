@@ -8,13 +8,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>About ME</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC50_6RYLDFuVsX91aCSbTP7BsKaVE-fMY"></script>
     <script src="script.js"></script>
     <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
     <link rel="manifest" href="images/site.webmanifest">
   </head>
-  <body>
+  <body onload="createMap();">
     <div class="row">
       <img src="images/logo.png"
     </div>   
@@ -24,8 +25,9 @@
 	  <li><a href="showcase.html" style="color:white"> PROJECT SHOWCASE </a></li>
       <li class="active"><a href="about.html" style="color:white"> ABOUT </a></li>
       <li><a href="contact.html" style="color:white"> CONTACT </a></li>
-      <li><a href="stock.html" style="color:white"> STOCK PICKER</a></li>
-      <li><a href="comments.html" style="color:white"> COMMENTS</a></li>
+      <li><a href="stock.html" style="color:white"> STOCK PICKER </a></li>
+      <li><a href="comments.html" style="color:white"> COMMENTS </a></li>
+      <li><a href="ev.html" style="color:white"> EV STATIONS </a> </li>
     </ul>
     <div id="content">
       <h1 style=margin-top:50px>&#128215<i>About Me</i>&#128215</h1>
@@ -50,7 +52,9 @@
         <dt>- I have ran track since my freshman year of high school</dt>
         <dt>- I became intrested in the stock market at the age of 13</dt>
         <dt>- I am an only child</dt>
+        <dt>- A dream of mine is to vist the racetrack below</dt>
       </dl>
+       <div id="map"></div>
       <button onclick="addRandomGreeting()">Click for a random message</button>
       <div id="greeting-container"></div>
     </div><br>
