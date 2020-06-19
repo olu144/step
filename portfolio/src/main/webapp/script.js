@@ -334,7 +334,10 @@ function loadPerspectiveList() {
         body: JSON.stringify({comment: {text: comment.comment}, languages: [], requestedAttributes: { TOXICITY: {} }})})
         .then(response => response.json())
         .then(data => {
-          PerspectiveList.appendChild(createPerspectiveListElement("Comment: "+"'"+comment.comment+"'"+" | "+"Toxicity Score: "+ data.attributeScores.TOXICITY.summaryScore.value));
+         PerspectiveList.appendChild(createPerspectiveListElement(
+              "Comment: " + "'" + comment.comment + "'" + " | " +
+              "Toxicity Score: " +
+              data.attributeScores.TOXICITY.summaryScore.value));
         });
     });
   });
