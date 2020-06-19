@@ -127,8 +127,3 @@ function loadChartsApi() {
   google.charts.setOnLoadCallback(drawChart);
   google.charts.setOnLoadCallback(drawChart2);
 }
-
-/*function loadChartsApi2() {
-  google.charts.load('current', {'packages':['line']});
-  google.charts.setOnLoadCallback(drawChart2);
-}*/
