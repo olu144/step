@@ -100,7 +100,7 @@ function drawStockChart() {
 }
 
 /** Fetches season data and uses it to create a chart. */
-function drawAnimalChart() {
+function drawSeasonChart() {
   fetch('/season-data').then(response => response.json())
   .then((seasonVotes) => {
     const data = new google.visualization.DataTable();
@@ -225,5 +225,5 @@ function createMap() {
 function loadChartsApi() {
   google.charts.load('current', {'packages':['corechart']});
   google.charts.setOnLoadCallback(drawStockChart);
-  google.charts.setOnLoadCallback(drawAnimalChart);
+  google.charts.setOnLoadCallback(drawSeasonChart);
 }
