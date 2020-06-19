@@ -80,7 +80,7 @@ async function isLoggedIn() {
 }
 
 /** Creates a chart and adds it to the page. */
-function drawChart() {
+function drawAnimalChart() {
   const data = new google.visualization.DataTable();
   data.addColumn('string', 'Animal');
   data.addColumn('number', 'Count');
@@ -101,8 +101,8 @@ function drawChart() {
   chart.draw(data, options);
 }
 
-function drawChart2() {
-  var data = new google.visualization.DataTable();
+function drawStockChart() {
+  const data = new google.visualization.DataTable();
   data.addColumn('number', 'Week');
   data.addColumn('number', 'Stock A');
   data.addColumn('number', 'Stock B');
@@ -110,7 +110,7 @@ function drawChart2() {
     [1,  50, 70],
     [2,  130, 100],
   ]);
-  var options = {
+  const options = {
     chart: {
       title: 'Weekly Performcance of Stock A and Stock B',
       subtitle: 'in dollars (USD)'
@@ -118,12 +118,12 @@ function drawChart2() {
     width: 900,
     height: 500
   };
-  var chart = new google.charts.Line(document.getElementById('linechart_material'));
+  const chart = new google.charts.Line(document.getElementById('linechart-material'));
   chart.draw(data, google.charts.Line.convertOptions(options));
 }
 
 function loadChartsApi() {
   google.charts.load('current', {'packages':['corechart', 'line']});
-  google.charts.setOnLoadCallback(drawChart);
-  google.charts.setOnLoadCallback(drawChart2);
+  google.charts.setOnLoadCallback(drawAnimalChart);
+  google.charts.setOnLoadCallback(drawStockChart);
 }
