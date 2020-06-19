@@ -26,7 +26,12 @@ public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     long requestDuration = request.getDuration();
     Collection<String> requestAttendees = request.getAttendees();
-    Collection<String> optionalAttendees = request.getOptionalAttendees();
+    Collection<String> optionalAttendees = new ArrayList<String>();
+    // this try-catch avoids a potential NullPointerException
+    try {
+      optionalAttendees = request.getOptionalAttendees();
+    } catch(Exception e) {
+    }
     ArrayList<TimeRange> validTimes = new ArrayList<TimeRange>();
     ArrayList<TimeRange> validTimesWOptional = new ArrayList<TimeRange>();
     ArrayList<TimeRange> noOverlap = new ArrayList<TimeRange>();
@@ -36,39 +41,47 @@ public final class FindMeetingQuery {
     int newStart;
     int newEnd;
 
-    //edge case: if there are no attendees the whole day is returned        
+    // edge case: if there are no attendees the whole day is returned        
     if (requestAttendees.isEmpty() && optionalAttendees.isEmpty()) {
       return Arrays.asList(TimeRange.WHOLE_DAY);
     }
-    //edge case: if the requested meeting is longer than a day there are no options
+
+    // edge case: if the requested meeting is longer than a day there are no options
     if (requestDuration >= TimeRange.WHOLE_DAY.duration()) {
       return Arrays.asList();  
     }
+
     validTimes = addValidTimes(events, request);
-    validTimesWOptional = addValidTimesWithOptional(events, request, validTimes);
-    //if there are no meetings the whole day is returned 
+    if(!optionalAttendees.isEmpty()) {
+      validTimesWOptional = addValidTimesWithOptional(events, request, validTimes);
+    }
+
+    // if there are no meetings the whole day is returned 
     if(validTimes.isEmpty() && validTimesWOptional.isEmpty()) {
-      return Arrays.asList(TimeRange.WHOLE_DAY);    
+     return Arrays.asList(TimeRange.WHOLE_DAY);    
     }  
+
     noOverlap = removeOverlap(validTimes);
     noOverlapWOptional = removeOverlap(validTimesWOptional);
     availableTimesWOptional = addAvailableRanges(request, noOverlapWOptional);
     availableTimes = addAvailableRanges(request, noOverlap);
-    //return the list of available time ranges
+
+    // return the list of available time ranges
     if(!availableTimesWOptional.isEmpty()) {
       return availableTimesWOptional;
     }
     return availableTimes;
   }
   
-  //if there are multiple meetings consolidate overlapping meetings into one range of time
+  // if there are multiple meetings consolidate overlapping meetings into one range of time
   public ArrayList<TimeRange> removeOverlap(ArrayList<TimeRange> times) {
     ArrayList<TimeRange> noOverlap = new ArrayList<TimeRange>();
     Collections.sort(times, TimeRange.ORDER_BY_START);
     int newStart;
     int newEnd;
-    if(times.size() > 1){
-      for (int i = 1; i < times.size(); i ++){
+
+    if(times.size() > 1) {
+      for (int i = 1; i < times.size(); i++){
         if (times.get(i - 1).overlaps(times.get(i))){
           newStart = Math.min(times.get(i - 1).start(), times.get(i).start());
           newEnd = Math.max(times.get(i).end(), times.get(i - 1).end());
@@ -86,10 +99,11 @@ public final class FindMeetingQuery {
       return noOverlap;
   }
 
-  //add the times for all meetings where there are mandatory attendees
+  // add the times for all meetings where there are mandatory attendees
   public ArrayList<TimeRange> addValidTimes(Collection<Event> events, MeetingRequest request) {
     ArrayList<TimeRange> validTimes = new ArrayList<TimeRange>();
-    Collection<String> requestAttendees = request.getAttendees();   
+    Collection<String> requestAttendees = request.getAttendees(); 
+
     for (Event event: events) {
       if (!event.getAttendees().isEmpty()) {
         for(String attendee : requestAttendees){
@@ -103,53 +117,57 @@ public final class FindMeetingQuery {
     return validTimes;
   }
 
-  //return the occupied time ranges including optional attendee schedules uses list of mandatory attendee time ranges to save time
+  // return the occupied time ranges including optional attendee schedules uses list of mandatory attendee time ranges to save time
   public ArrayList<TimeRange> addValidTimesWithOptional(Collection<Event> events, MeetingRequest request, ArrayList<TimeRange> withoutOptional) {
-    Collection<String> optionalAttendees = request.getOptionalAttendees();   
+    Collection<String> optionalAttendees = request.getOptionalAttendees();
     ArrayList<TimeRange> validTimesWithOptional = new ArrayList<TimeRange>();
-    validTimesWithOptional.addAll(withoutOptional);
-    if(!optionalAttendees.isEmpty()){
+    validTimesWithOptional.addAll(withoutOptional);  
       for (Event event : events) {
         for(String attendee : optionalAttendees){
           if(event.getAttendees().contains(attendee)){
             validTimesWithOptional.add(event.getWhen());
             break;
           } 
-        }
-      } 
-    }
+        } 
+      }
+
     return validTimesWithOptional; 
   }
 
-  //return all the time ranges that are not occupied 
+  // return all the time ranges that are not occupied 
   public ArrayList<TimeRange> addAvailableRanges(MeetingRequest request, ArrayList<TimeRange> occupiedTimes) {
     long requestDuration = request.getDuration();
     ArrayList<TimeRange> availableRanges = new ArrayList<TimeRange>();
     int newStart;
     int newEnd;
-    if(occupiedTimes.isEmpty()){
+
+    if(occupiedTimes.isEmpty()) {
       return occupiedTimes;
     }
-    //if there is adequate time between the beginning of the day and the beginning of the first meeting add that time range to the output list   
+
+    // if there is adequate time between the beginning of the day and the beginning of the first meeting add that time range to the output list   
     if(occupiedTimes.get(0).start() - TimeRange.START_OF_DAY >= requestDuration) {
       newStart = TimeRange.START_OF_DAY;
       newEnd = occupiedTimes.get(0).start();
       availableRanges.add(TimeRange.fromStartEnd(newStart, newEnd, false));    
     }
-    //if there are adequate time between meetings add those time ranges to the output list
-    for (int i = 0; i < occupiedTimes.size() - 1; i ++) {
+
+    // if there are adequate time between meetings add those time ranges to the output list
+    for (int i = 0; i < occupiedTimes.size() - 1; i++) {
       if(occupiedTimes.get(i + 1).start() - occupiedTimes.get(i).end() >= requestDuration){
         newStart = occupiedTimes.get(i).end();
         newEnd = occupiedTimes.get(i + 1).start();
         availableRanges.add(TimeRange.fromStartEnd(newStart, newEnd, false));
       }
     }
-    //if there is adequate time between the end of the day and the end of the last meeting add that time range to the output list   
+
+    // if there is adequate time between the end of the day and the end of the last meeting add that time range to the output list   
     if(TimeRange.END_OF_DAY - occupiedTimes.get(occupiedTimes.size() - 1).end() >= requestDuration) {
       newStart = occupiedTimes.get(occupiedTimes.size() - 1).end();
       newEnd = TimeRange.END_OF_DAY;
       availableRanges.add(TimeRange.fromStartEnd(newStart,newEnd , true));
     }
+
     return availableRanges;
   }
 }
