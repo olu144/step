@@ -99,28 +99,29 @@ function drawStockChart() {
   });
 }
 
-function drawStockChart() {
-  const data = new google.visualization.DataTable();
-  data.addColumn('number', 'Week');
-  data.addColumn('number', 'Stock A');
-  data.addColumn('number', 'Stock B');
-  data.addRows([
-    [1,  50, 70],
-    [2,  130, 100],
-  ]);
-  const options = {
-    chart: {
-      title: 'Weekly Performcance of Stock A and Stock B',
-      subtitle: 'in dollars (USD)'
-    },
-    width: 900,
-    height: 500
-  };
-  const chart = new google.charts.Line(document.getElementById('linechart-material'));
-  chart.draw(data, google.charts.Line.convertOptions(options));
+/** Fetches season data and uses it to create a chart. */
+function drawSeasonChart() {
+  fetch('/season-data').then(response => response.json())
+  .then((seasonVotes) => {
+    const data = new google.visualization.DataTable();
+    data.addColumn('string', 'Season');
+    data.addColumn('number', 'Votes');
+    Object.keys(seasonVotes).forEach((season) => {
+      data.addRow([season, seasonVotes[season]]);
+    });
+    const options = {
+      'title': 'Favorite Seasons',
+      'width':600,
+      'height':500
+    };
+    const chart = new google.visualization.ColumnChart(
+        document.getElementById('chart2-container'));
+    chart.draw(data, options);
+  });
 }
 
 function loadChartsApi() {
   google.charts.load('current', {'packages':['corechart']});
   google.charts.setOnLoadCallback(drawStockChart);
+  google.charts.setOnLoadCallback(drawSeasonChart);
 }
