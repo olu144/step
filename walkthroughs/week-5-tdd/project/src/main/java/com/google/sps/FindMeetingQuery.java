@@ -28,7 +28,7 @@ public final class FindMeetingQuery {
     // this try-catch avoids a potential NullPointerException
     try {
       optionalAttendees = request.getOptionalAttendees();
-    } catch(Exception e) {
+    } catch(NullPointerException e) {
     }
     // edge case: if there are no attendees the whole day is returned
     Collection<String> requestAttendees = request.getAttendees();        
