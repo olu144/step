@@ -43,8 +43,8 @@ public final class FindMeetingQuery {
     } 
     ArrayList<TimeRange> noOverlap = removeOverlap(alreadyBookedTimes);
     ArrayList<TimeRange> noOverlapWOptional = removeOverlap(alreadyBookedTimesWOptional);
-    ArrayList<TimeRange> availableTimesWOptional = addAvailableRanges(request, noOverlapWOptional);
     ArrayList<TimeRange> availableTimes = addAvailableRanges(request, noOverlap);
+    ArrayList<TimeRange> availableTimesWOptional = addAvailableRanges(request, noOverlapWOptional);
     // return the list of available time ranges
     if (!availableTimesWOptional.isEmpty()) {
       return availableTimesWOptional;
