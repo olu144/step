@@ -59,7 +59,7 @@ async function loadComments() {
 // Creates an element that represents a comment
 function createListElement(comment) {
   const commentListElement = document.createElement('li');
-  commentListElement.innerText = comment.email + " : " + comment.comment
+  commentListElement.innerText = comment.email + " : " + comment.comment;
   return commentListElement;
 }
 
@@ -209,8 +209,8 @@ function createMap() {
     ]
   });
   map.setTilt(45);
-  var contentString = '<p>The Nurburgring</p>A 12.9 mile track that houses every type of track surface within a single lap';
-  var infowindow = new google.maps.InfoWindow({
+  const contentString = '<p>The Nurburgring</p>A 12.9 mile track that houses every type of track surface within a single lap';
+  const infowindow = new google.maps.InfoWindow({
     content: contentString
   });
   const marker = new google.maps.Marker({
@@ -320,4 +320,31 @@ function loadChartsApi() {
   google.charts.load('current', {'packages':['corechart']});
   google.charts.setOnLoadCallback(drawStockChart);
   google.charts.setOnLoadCallback(drawSeasonChart);
+}
+
+function loadPerspectiveList() {
+  fetch('/data?numCommentsToLoad=' + 3).then(response => response.json()).then((comments) => {
+    const perspectiveList = document.getElementById('perspective-list');
+    perspectiveList.innerHTML = ''
+    comments.forEach((comment) => {
+      fetch('https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=NOT_HERE',
+      {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({comment: {text: comment.comment}, languages: [], requestedAttributes: { TOXICITY: {} }})})
+        .then(response => response.json())
+        .then(data => {
+         perspectiveList.appendChild(createPerspectiveListElement(
+              "Comment: " + "'" + comment.comment + "'" + " | " +
+              "Toxicity Score: " +
+              data.attributeScores.TOXICITY.summaryScore.value));
+        });
+    });
+  });
+}
+
+function createPerspectiveListElement(comment) {
+  const commentListElement = document.createElement('li');
+  commentListElement.innerText = comment;
+  return commentListElement;
 }
