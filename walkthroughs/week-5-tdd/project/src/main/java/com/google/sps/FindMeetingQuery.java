@@ -35,22 +35,16 @@ public final class FindMeetingQuery {
     if (requestDuration >= TimeRange.WHOLE_DAY.duration()) {
       return Arrays.asList();  
     }
-    ArrayList<TimeRange> alreadyBookedTimes = new ArrayList<TimeRange>();
-    ArrayList<TimeRange> alreadyBookedTimesWOptional = new ArrayList<TimeRange>();
-    alreadyBookedTimes = getAlreadyBookedTimes(events, request);
-    alreadyBookedTimesWOptional = getAlreadyBookedTimesWithOptional(events, request, alreadyBookedTimes);
+    ArrayList<TimeRange> alreadyBookedTimes = getAlreadyBookedTimes(events, request);
+    ArrayList<TimeRange> alreadyBookedTimesWOptional = getAlreadyBookedTimesWithOptional(events, request, alreadyBookedTimes);
     // if there are no meetings the whole day is returned 
     if (alreadyBookedTimes.isEmpty() && alreadyBookedTimesWOptional.isEmpty()) {
       return Arrays.asList(TimeRange.WHOLE_DAY);    
     } 
-    ArrayList<TimeRange> noOverlap = new ArrayList<TimeRange>();
-    ArrayList<TimeRange> noOverlapWOptional = new ArrayList<TimeRange>(); 
-    noOverlap = removeOverlap(alreadyBookedTimes);
-    noOverlapWOptional = removeOverlap(alreadyBookedTimesWOptional);
-    ArrayList<TimeRange> availableTimes = new ArrayList<TimeRange>();
-    ArrayList<TimeRange> availableTimesWOptional = new ArrayList<TimeRange>();
-    availableTimesWOptional = addAvailableRanges(request, noOverlapWOptional);
-    availableTimes = addAvailableRanges(request, noOverlap);
+    ArrayList<TimeRange> noOverlap = removeOverlap(alreadyBookedTimes);
+    ArrayList<TimeRange> noOverlapWOptional = removeOverlap(alreadyBookedTimesWOptional);
+    ArrayList<TimeRange> availableTimesWOptional = addAvailableRanges(request, noOverlapWOptional);
+    ArrayList<TimeRange> availableTimes = addAvailableRanges(request, noOverlap);
     // return the list of available time ranges
     if (!availableTimesWOptional.isEmpty()) {
       return availableTimesWOptional;
