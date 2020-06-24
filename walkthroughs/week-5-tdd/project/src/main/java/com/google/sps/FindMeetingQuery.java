@@ -24,12 +24,7 @@ import java.util.Set;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    Collection<String> optionalAttendees = new ArrayList<String>();
-    // this try-catch avoids a potential NullPointerException
-    try {
-      optionalAttendees = request.getOptionalAttendees();
-    } catch(NullPointerException e) {
-    }
+    Collection<String> optionalAttendees = getOptionalAttendees(request);
     // edge case: if there are no attendees the whole day is returned
     Collection<String> requestAttendees = request.getAttendees();        
     if (requestAttendees.isEmpty() && optionalAttendees.isEmpty()) {
@@ -148,5 +143,15 @@ public final class FindMeetingQuery {
       availableRanges.add(TimeRange.fromStartEnd(newStart,newEnd , true));
     }
     return availableRanges;
+  }
+
+  // avoid a potential NullPointerException when getting optional attendees
+  public Collection<String> getOptionalAttendees(MeetingRequest request) {
+    Collection<String> optionalAttendees = new ArrayList<String>();
+    try {
+      optionalAttendees = request.getOptionalAttendees();
+    } catch(NullPointerException error) {
+    }
+    return optionalAttendees;  
   }
 }
