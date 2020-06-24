@@ -23,10 +23,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 public final class FindMeetingQuery {
-  public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {  
+  public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
+    Collection<String> optionalAttendees = new ArrayList<String>();
+    // this try-catch avoids a potential NullPointerException
+    try {
+      optionalAttendees = request.getOptionalAttendees();
+    } catch(NullPointerException e) {
+    }  
     // edge case: if there are no attendees the whole day is returned  
-    Collection<String> requestAttendees = request.getAttendees();
-    Collection<String> optionalAttendees = request.getOptionalAttendees();      
+    Collection<String> requestAttendees = request.getAttendees();      
     if (requestAttendees.isEmpty() && optionalAttendees.isEmpty()) {
       return Arrays.asList(TimeRange.WHOLE_DAY);
     }
@@ -36,7 +41,10 @@ public final class FindMeetingQuery {
       return Arrays.asList();  
     }
     ArrayList<TimeRange> alreadyBookedTimes = getAlreadyBookedTimes(events, request);
-    ArrayList<TimeRange> alreadyBookedTimesWOptional = getAlreadyBookedTimesWithOptional(events, request, alreadyBookedTimes);
+    ArrayList<TimeRange> alreadyBookedTimesWOptional = new ArrayList<TimeRange>();
+    if (!optionalAttendees.isEmpty()) {
+      alreadyBookedTimesWOptional = getAlreadyBookedTimesWithOptional(events, request, alreadyBookedTimes);
+    }
     // if there are no meetings the whole day is returned 
     if (alreadyBookedTimes.isEmpty() && alreadyBookedTimesWOptional.isEmpty()) {
       return Arrays.asList(TimeRange.WHOLE_DAY);    
