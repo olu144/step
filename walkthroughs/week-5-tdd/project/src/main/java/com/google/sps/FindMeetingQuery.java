@@ -147,7 +147,7 @@ public final class FindMeetingQuery {
     return availableRanges;
   }
   
-  public Collection<String> getOptionalAttendees(MeetingRequest request){
+  public Collection<String> getOptionalAttendees(MeetingRequest request) {
     Collection<String> optionalAttendees = new ArrayList<String>();
     // this try-catch avoids a potential NullPointerException
     try {
