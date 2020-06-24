@@ -24,19 +24,14 @@ import java.util.Set;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    Collection<String> optionalAttendees = new ArrayList<String>();
-    // this try-catch avoids a potential NullPointerException
-    try {
-      optionalAttendees = request.getOptionalAttendees();
-    } catch(NullPointerException e) {
-    }  
-    // edge case: if there are no attendees the whole day is returned  
-    Collection<String> requestAttendees = request.getAttendees();      
+    Collection<String> optionalAttendees = getOptionalAttendees(request);
+    Collection<String> requestAttendees = request.getAttendees();
+    // edge case: if there are no attendees the whole day is returned        
     if (requestAttendees.isEmpty() && optionalAttendees.isEmpty()) {
       return Arrays.asList(TimeRange.WHOLE_DAY);
     }
-    // edge case: if the requested meeting is longer than a day there are no options
     long requestDuration = request.getDuration();
+    // edge case: if the requested meeting is longer than a day there are no options
     if (requestDuration >= TimeRange.WHOLE_DAY.duration()) {
       return Arrays.asList();  
     }
@@ -53,11 +48,11 @@ public final class FindMeetingQuery {
     ArrayList<TimeRange> noOverlapWOptional = removeOverlap(alreadyBookedTimesWOptional);
     ArrayList<TimeRange> availableTimes = addAvailableRanges(request, noOverlap);
     ArrayList<TimeRange> availableTimesWOptional = addAvailableRanges(request, noOverlapWOptional);
-    // return the list of available time ranges
-    if (!availableTimesWOptional.isEmpty()) {
-      return availableTimesWOptional;
+    // if there are no available times that include optional attendees return the list of available times that does not consider them
+    if (availableTimesWOptional.isEmpty()) {
+      return availableTimes;
     }
-    return availableTimes;
+    return availableTimesWOptional;
   }
   
   // if there are multiple meetings consolidate overlapping meetings into one range of time
@@ -150,5 +145,15 @@ public final class FindMeetingQuery {
       availableRanges.add(TimeRange.fromStartEnd(newStart,newEnd , true));
     }
     return availableRanges;
+  }
+  
+  public Collection<String> getOptionalAttendees(MeetingRequest request){
+    Collection<String> optionalAttendees = new ArrayList<String>();
+    // this try-catch avoids a potential NullPointerException
+    try {
+      optionalAttendees = request.getOptionalAttendees();
+    } catch(NullPointerException error) {
+    }
+    return optionalAttendees;  
   }
 }
