@@ -324,8 +324,8 @@ function loadChartsApi() {
 
 function loadPerspectiveList() {
   fetch('/data?numCommentsToLoad=' + 3).then(response => response.json()).then((comments) => {
-    const PerspectiveList = document.getElementById('perspective-list');
-    PerspectiveList.innerHTML = ''
+    const perspectiveList = document.getElementById('perspective-list');
+    perspectiveList.innerHTML = ''
     comments.forEach((comment) => {
       fetch('https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=NOT_HERE',
       {
@@ -334,7 +334,10 @@ function loadPerspectiveList() {
         body: JSON.stringify({comment: {text: comment.comment}, languages: [], requestedAttributes: { TOXICITY: {} }})})
         .then(response => response.json())
         .then(data => {
-          PerspectiveList.appendChild(createPerspectiveListElement("Comment: "+"'"+comment.comment+"'"+" | "+"Toxicity Score: "+ data.attributeScores.TOXICITY.summaryScore.value));
+         perspectiveList.appendChild(createPerspectiveListElement(
+              "Comment: " + "'" + comment.comment + "'" + " | " +
+              "Toxicity Score: " +
+              data.attributeScores.TOXICITY.summaryScore.value));
         });
     });
   });
